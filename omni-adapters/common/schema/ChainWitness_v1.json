@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://andrew-lee-cruz.com/schemas/ChainWitness_v1.json",
+  "title": "Chain Witness v1",
+  "description": "Schema for blockchain event witness data in Proof-of-AI systems",
+  "type": "object",
+  "required": [
+    "version",
+    "chainId", 
+    "blockNumber",
+    "transactionHash",
+    "timestamp",
+    "eventData",
+    "signature",
+    "identity"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version"
+    },
+    "chainId": {
+      "type": "string",
+      "description": "Blockchain identifier (e.g., ethereum, solana, cosmos)",
+      "minLength": 1
+    },
+    "blockNumber": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Block number where the event occurred"
+    },
+    "transactionHash": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{64}$|^[1-9A-HJ-NP-Za-km-z]{43,44}$",
+      "description": "Transaction hash (supports Ethereum hex and Solana base58 formats)"
+    },
+    "timestamp": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Unix timestamp when the event was witnessed"
+    },
+    "eventData": {
+      "type": "object",
+      "description": "Raw event data from the blockchain",
+      "additionalProperties": true
+    },
+    "merkleProof": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Optional Merkle proof for event inclusion"
+    },
+    "signature": {
+      "type": "string",
+      "description": "Cryptographic signature of the witness data"
+    },
+    "identity": {
+      "type": "object",
+      "required": ["uid", "orcid", "creator"],
+      "properties": {
+        "uid": {
+          "type": "string",
+          "const": "ALC-ROOT-1010-1111-XCOV∞",
+          "description": "Andrew Lee Cruz unique identifier"
+        },
+        "orcid": {
+          "type": "string",
+          "const": "0009-0000-3695-1084",
+          "description": "ORCID identifier for Andrew Lee Cruz"
+        },
+        "creator": {
+          "type": "string",
+          "const": "Andrew Lee Cruz",
+          "description": "Creator name"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Identity and provenance information"
+    }
+  },
+  "additionalProperties": false,
+  "_metadata": {
+    "author": "Andrew Lee Cruz",
+    "uid": "ALC-ROOT-1010-1111-XCOV∞",
+    "orcid": "0009-0000-3695-1084",
+    "license": "Universal Creator License (UCL-∞)",
+    "created": "2024-08-08",
+    "purpose": "Omni-chain Proof-of-AI witness validation"
+  }
+}

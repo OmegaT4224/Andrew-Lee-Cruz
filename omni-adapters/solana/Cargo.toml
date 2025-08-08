@@ -1,0 +1,47 @@
+[package]
+name = "omni-adapters-solana"
+version = "1.0.0"
+edition = "2021"
+authors = ["Andrew Lee Cruz <alc@andrew-lee-cruz.com>"]
+description = "Solana adapter for omni-chain Proof-of-AI overlays"
+license = "UCL-∞"
+repository = "https://github.com/OmegaT4224/Andrew-Lee-Cruz"
+keywords = ["blockchain", "solana", "proof-of-ai", "omni-chain"]
+
+[dependencies]
+solana-client = "1.16"
+solana-sdk = "1.16"
+solana-program = "1.16"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+sha2 = "0.10"
+base64 = "0.21"
+bs58 = "0.4"
+log = "0.4"
+env_logger = "0.10"
+anyhow = "1.0"
+thiserror = "1.0"
+
+[dev-dependencies]
+tokio-test = "0.4"
+
+[lib]
+name = "omni_adapters_solana"
+path = "src/lib.rs"
+
+[[bin]]
+name = "solana-watcher"
+path = "src/bin/watcher.rs"
+
+[[bin]]
+name = "solana-attestor"
+path = "src/bin/attestor.rs"
+
+[package.metadata]
+# Provenance and identity metadata
+author_uid = "ALC-ROOT-1010-1111-XCOV∞"
+author_orcid = "0009-0000-3695-1084"
+creator = "Andrew Lee Cruz"
+purpose = "Solana blockchain adapter for Proof-of-AI witness generation"
+license_full = "Universal Creator License (UCL-∞) - All rights reserved"
