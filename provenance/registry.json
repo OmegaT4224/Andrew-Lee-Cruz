@@ -1,0 +1,171 @@
+{
+  "registry_version": "1.0",
+  "created": "2024-08-08T00:00:00Z",
+  "last_updated": "2024-08-08T00:00:00Z",
+  "description": "Provenance registry for omni-chain Proof-of-AI overlays",
+  "creator": {
+    "name": "Andrew Lee Cruz",
+    "uid": "ALC-ROOT-1010-1111-XCOV∞",
+    "orcid": "0009-0000-3695-1084",
+    "license": "Universal Creator License (UCL-∞)",
+    "rights": "All rights reserved. Protected by blockchain provenance."
+  },
+  "chains": {
+    "ethereum": {
+      "chain_id": "ethereum",
+      "network_id": 1,
+      "adapter_type": "evm",
+      "status": "active",
+      "supported_algorithms": ["SHA256", "Keccak256", "Blake2b", "CRUZ-256"],
+      "deployment": {
+        "watcher": "omni-adapters/evm/src/watcher.ts",
+        "witness": "omni-adapters/evm/src/witness.ts",
+        "attestor": "omni-adapters/evm/src/evm_attestor.ts"
+      },
+      "endpoints": {
+        "mainnet": "https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY",
+        "testnet": "https://eth-goerli.alchemyapi.io/v2/YOUR_API_KEY"
+      },
+      "contracts": {
+        "poai_attestor": "0x0000000000000000000000000000000000000000",
+        "printing_license": "0x0000000000000000000000000000000000000000"
+      }
+    },
+    "polygon": {
+      "chain_id": "polygon",
+      "network_id": 137,
+      "adapter_type": "evm",
+      "status": "active",
+      "supported_algorithms": ["SHA256", "Keccak256", "Blake2b", "CRUZ-256"],
+      "deployment": {
+        "watcher": "omni-adapters/evm/src/watcher.ts",
+        "witness": "omni-adapters/evm/src/witness.ts",
+        "attestor": "omni-adapters/evm/src/evm_attestor.ts"
+      },
+      "endpoints": {
+        "mainnet": "https://polygon-rpc.com",
+        "testnet": "https://rpc-mumbai.maticvigil.com"
+      }
+    },
+    "solana": {
+      "chain_id": "solana",
+      "network_id": "mainnet-beta",
+      "adapter_type": "solana",
+      "status": "active",
+      "supported_algorithms": ["SHA256", "Blake2b", "CRUZ-256"],
+      "deployment": {
+        "watcher": "omni-adapters/solana/src/watcher.rs",
+        "witness": "omni-adapters/solana/src/witness.rs",
+        "attestor": "omni-adapters/solana/src/attestor.rs"
+      },
+      "endpoints": {
+        "mainnet": "https://api.mainnet-beta.solana.com",
+        "testnet": "https://api.testnet.solana.com",
+        "devnet": "https://api.devnet.solana.com"
+      },
+      "programs": {
+        "poai_attestor": "11111111111111111111111111111111"
+      }
+    },
+    "cosmos": {
+      "chain_id": "cosmoshub-4",
+      "network_id": "cosmoshub-4",
+      "adapter_type": "cosmos",
+      "status": "active",
+      "supported_algorithms": ["SHA256", "Blake2b", "CRUZ-256"],
+      "deployment": {
+        "watcher": "omni-adapters/cosmos/src/watcher.go",
+        "witness": "omni-adapters/cosmos/src/witness.go",
+        "attestor": "omni-adapters/cosmos/src/attestor.go"
+      },
+      "endpoints": {
+        "mainnet": "https://rpc.cosmos.network:443",
+        "testnet": "https://rpc.testnet.cosmos.network:443"
+      }
+    }
+  },
+  "schemas": {
+    "chain_witness": {
+      "version": "1.0",
+      "schema_url": "omni-adapters/common/schema/ChainWitness_v1.json",
+      "description": "Schema for blockchain event witness data"
+    },
+    "poai_digest": {
+      "version": "1.0", 
+      "schema_url": "omni-adapters/common/schema/PoAIDigest_v1.json",
+      "description": "Schema for Proof-of-AI computation digest"
+    }
+  },
+  "algorithms": {
+    "SHA256": {
+      "description": "Standard SHA-256 cryptographic hash function",
+      "complexity": "basic",
+      "supported_chains": ["ethereum", "polygon", "solana", "cosmos"]
+    },
+    "Keccak256": {
+      "description": "Ethereum's Keccak-256 hash function",
+      "complexity": "basic",
+      "supported_chains": ["ethereum", "polygon"]
+    },
+    "Blake2b": {
+      "description": "BLAKE2b cryptographic hash function",
+      "complexity": "intermediate",
+      "supported_chains": ["ethereum", "polygon", "solana", "cosmos"]
+    },
+    "CRUZ-256": {
+      "description": "Custom CRUZ theorem-based hash function by Andrew Lee Cruz",
+      "complexity": "advanced",
+      "supported_chains": ["ethereum", "polygon", "solana", "cosmos"],
+      "creator": "Andrew Lee Cruz",
+      "uid": "ALC-ROOT-1010-1111-XCOV∞",
+      "patent_pending": true
+    }
+  },
+  "identity_requirements": {
+    "uid": {
+      "required": true,
+      "format": "ALC-ROOT-1010-1111-XCOV∞",
+      "description": "Andrew Lee Cruz unique identifier"
+    },
+    "orcid": {
+      "required": true,
+      "format": "0009-0000-3695-1084",
+      "description": "ORCID identifier for academic attribution"
+    },
+    "creator": {
+      "required": true,
+      "value": "Andrew Lee Cruz",
+      "description": "Creator name for all provenance records"
+    }
+  },
+  "compliance": {
+    "license": "Universal Creator License (UCL-∞)",
+    "copyright": "© 2024 Andrew Lee Cruz. All rights reserved.",
+    "attribution_required": true,
+    "commercial_use": "Requires explicit permission",
+    "modifications": "Requires attribution and approval",
+    "distribution": "Allowed with attribution"
+  },
+  "ci_matrix": {
+    "node_versions": ["18", "20"],
+    "rust_versions": ["1.70", "1.71"],
+    "go_versions": ["1.20", "1.21"],
+    "test_networks": ["testnet", "devnet", "localhost"],
+    "build_targets": {
+      "evm": ["compile", "test", "lint"],
+      "solana": ["build", "test", "clippy"],
+      "cosmos": ["build", "test", "vet"]
+    }
+  },
+  "metadata": {
+    "total_adapters": 3,
+    "total_chains": 4,
+    "last_verification": "2024-08-08T00:00:00Z",
+    "next_update": "2024-09-08T00:00:00Z",
+    "maintainer": {
+      "name": "Andrew Lee Cruz",
+      "uid": "ALC-ROOT-1010-1111-XCOV∞",
+      "email": "contact@andrew-lee-cruz.com"
+    }
+  }
+}

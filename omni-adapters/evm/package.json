@@ -1,0 +1,57 @@
+{
+  "name": "@andrew-lee-cruz/omni-adapters-evm",
+  "version": "1.0.0",
+  "description": "EVM adapter for omni-chain Proof-of-AI overlays",
+  "author": {
+    "name": "Andrew Lee Cruz",
+    "uid": "ALC-ROOT-1010-1111-XCOV∞",
+    "orcid": "0009-0000-3695-1084"
+  },
+  "license": "UCL-∞",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "ethers": "^6.7.1",
+    "ws": "^8.13.0",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "@types/ws": "^8.5.5",
+    "typescript": "^5.1.6",
+    "eslint": "^8.45.0",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
+    "jest": "^29.6.1",
+    "@types/jest": "^29.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmegaT4224/Andrew-Lee-Cruz.git",
+    "directory": "omni-adapters/evm"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "evm",
+    "proof-of-ai",
+    "omni-chain",
+    "andrew-lee-cruz"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "_metadata": {
+    "creator": "Andrew Lee Cruz",
+    "uid": "ALC-ROOT-1010-1111-XCOV∞",
+    "orcid": "0009-0000-3695-1084",
+    "purpose": "EVM blockchain adapter for Proof-of-AI witness generation"
+  }
+}
