@@ -5,12 +5,11 @@
 # Quantum Computing Framework
 qiskit==1.2.4
 qiskit-aer==0.15.1
-qiskit-algorithms==0.3.1
 
-# Scientific Computing
-numpy==1.24.3
-scipy==1.11.4
-matplotlib==3.7.2
+# Scientific Computing (compatible versions)
+numpy>=1.21.0,<2.0.0
+scipy>=1.7.0
+matplotlib>=3.5.0
 
 # Automation and Integration
 fastapi==0.111.0
@@ -25,10 +24,6 @@ rq==1.16.2
 
 # Security and Cryptography
 cryptography==42.0.5
-hashlib-compat==1.0.1
-
-# IPFS and Distributed Storage
-ipfs-python-api==0.3.0
 
 # GitHub Integration
 PyGithub==2.3.0
