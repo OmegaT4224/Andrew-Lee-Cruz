@@ -35,7 +35,7 @@ install:
 	@cd apps/omegat-ui && npm install
 	@cd services/pages-frontend && npm install
 	@cd services/cloudflare-chain && npm install
-	@cd agents/violet-af && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+	@cd agents/violet-af && python3 -m venv venv && . venv/bin/activate && pip install -r requirements.txt
 	@echo "✅ All dependencies installed"
 
 # Development servers
@@ -65,7 +65,7 @@ deploy-pages:
 # Quantum agent
 run-violet:
 	@echo "🔮 Running Violet Agent quantum sequence..."
-	@cd agents/violet-af && source venv/bin/activate && python quantum_sequence_trigger.py
+	@cd agents/violet-af && . venv/bin/activate && python quantum_sequence_trigger.py
 
 # Testing
 test:
@@ -73,7 +73,7 @@ test:
 	@cd apps/omegat-ui && npm test || echo "No tests configured for omegat-ui"
 	@cd services/pages-frontend && npm test || echo "No tests configured for pages-frontend"
 	@cd services/cloudflare-chain && npm test || echo "No tests configured for cloudflare-chain"
-	@cd agents/violet-af && source venv/bin/activate && python -m pytest || echo "No tests configured for violet-af"
+	@cd agents/violet-af && . venv/bin/activate && python -m pytest || echo "No tests configured for violet-af"
 	@echo "✅ Tests completed"
 
 # Linting
@@ -82,7 +82,7 @@ lint:
 	@cd apps/omegat-ui && npm run lint || echo "Linting not configured for omegat-ui"
 	@cd services/pages-frontend && npm run lint || echo "Linting not configured for pages-frontend"
 	@cd services/cloudflare-chain && npm run lint || echo "Linting not configured for cloudflare-chain"
-	@cd agents/violet-af && source venv/bin/activate && python -m flake8 . || echo "Linting not configured for violet-af"
+	@cd agents/violet-af && . venv/bin/activate && python -m flake8 . || echo "Linting not configured for violet-af"
 	@echo "✅ Linting completed"
 
 # Building

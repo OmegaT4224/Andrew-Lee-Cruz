@@ -105,7 +105,7 @@ install_python_deps() {
         
         # Activate virtual environment and install dependencies
         echo "   📦 Installing violet-af dependencies..."
-        source venv/bin/activate
+        . venv/bin/activate
         pip install -r requirements.txt
         deactivate
         
@@ -191,7 +191,7 @@ run_basic_tests() {
     if [ -f "agents/violet-af/quantum_sequence_trigger.py" ]; then
         echo "   🔮 Testing violet-af agent..."
         cd "$PROJECT_ROOT/agents/violet-af"
-        source venv/bin/activate
+        . venv/bin/activate
         python quantum_sequence_trigger.py --help > /dev/null 2>&1 || true
         deactivate
         echo "   ✅ violet-af agent loads successfully"
