@@ -9,5 +9,36 @@
 *.log.*
 *.sig
 
+# Build artifacts
 pkg/
-src/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+node_modules/
+dist/
+build/
+.venv/
+.env
+*.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Cloudflare
+.wrangler/
+wrangler.toml.local
+
+# Android
+*.apk
+*.aab
+.gradle/
+local.properties
+
+# Temporary files
+/tmp/
+*.tmp
+*.temp
