@@ -1,0 +1,57 @@
+name = "violet-af-poai-chain"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables
+[vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+
+# Secrets (set via `wrangler secret put POAI_API_KEY`)
+# POAI_API_KEY = "your-secure-api-key"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "cm_chain_db"
+database_name = "cm_chain_db"
+database_id = "your-d1-database-id"
+
+# R2 Storage binding
+[[r2_buckets]]
+binding = "cm-ledger"
+bucket_name = "cm-ledger"
+
+# Development configuration
+[env.development]
+name = "violet-af-poai-chain-dev"
+
+[env.development.vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+
+[[env.development.d1_databases]]
+binding = "cm_chain_db"
+database_name = "cm_chain_db_dev"
+database_id = "your-dev-d1-database-id"
+
+[[env.development.r2_buckets]]
+binding = "cm-ledger"
+bucket_name = "cm-ledger-dev"
+
+# Production configuration
+[env.production]
+name = "violet-af-poai-chain-prod"
+
+[env.production.vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+
+[[env.production.d1_databases]]
+binding = "cm_chain_db"
+database_name = "cm_chain_db_prod"
+database_id = "your-prod-d1-database-id"
+
+[[env.production.r2_buckets]]
+binding = "cm-ledger"
+bucket_name = "cm-ledger-prod"

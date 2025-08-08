@@ -1,3 +1,10 @@
+# VIOLET-AF: Autonomous Quantum Logic Initialization & PoAI Stack
+# Core Python dependencies
+# 
+# Author: Andrew Lee Cruz (UID: ALC-ROOT-1010-1111-XCOV∞, ORCID: 0009-0000-3695-1084)
+# License: UCL-∞
+
+# Web framework and API
 fastapi==0.111.0
 uvicorn[standard]==0.30.0
 redis==5.0.4
@@ -5,3 +12,33 @@ rq==1.16.2
 web3==6.20.1
 requests==2.32.3
 chromadb==0.5.5
+
+# Quantum computing (VIOLET-AF Quantum Engine)
+qiskit==0.44.2
+qiskit-aer==0.12.2
+numpy==1.24.4
+
+# Development and automation (AxiomDevCore)
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dateutil==2.8.2
+
+# PoAI Simulator
+websockets==11.0.3
+pydantic==2.4.2
+python-multipart==0.0.6
+aiofiles==23.2.1
+
+# Data processing and utilities
+pandas==2.0.3
+matplotlib==3.7.2
+scipy==1.11.2
+
+# Testing and development
+pytest==7.4.0
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+black==23.7.0
+flake8==6.0.0
+isort==5.12.0
+mypy==1.5.1
