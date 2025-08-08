@@ -1,0 +1,39 @@
+# VIOLET-AF Quantum Agent Dependencies
+# Creator UID: ALC-ROOT-1010-1111-XCOV∞
+# Sovereign Owner: allcatch37@gmail.com
+
+# Quantum Computing Framework
+qiskit==1.2.4
+qiskit-aer==0.15.1
+qiskit-algorithms==0.3.1
+
+# Scientific Computing
+numpy==1.24.3
+scipy==1.11.4
+matplotlib==3.7.2
+
+# Automation and Integration
+fastapi==0.111.0
+uvicorn[standard]==0.30.0
+requests==2.32.3
+pydantic==2.8.2
+python-dotenv==1.0.1
+
+# Memory and State Management
+redis==5.0.4
+rq==1.16.2
+
+# Security and Cryptography
+cryptography==42.0.5
+hashlib-compat==1.0.1
+
+# IPFS and Distributed Storage
+ipfs-python-api==0.3.0
+
+# GitHub Integration
+PyGithub==2.3.0
+gitpython==3.1.43
+
+# Logging and Monitoring
+structlog==24.2.0
+colorlog==6.8.2

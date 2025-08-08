@@ -1,0 +1,56 @@
+# Auto-labeling configuration for Cruz Theorem Sovereignty Repository
+# Creator UID: ALC-ROOT-1010-1111-XCOV∞
+# Sovereign Owner: allcatch37@gmail.com
+
+# Security and Infrastructure
+security:
+  - changed-files:
+    - any-glob-to-any-file: ['.github/workflows/**', '**/security/**', '**/auth/**', '**/*secret*', '**/*token*']
+
+infrastructure:
+  - changed-files:
+    - any-glob-to-any-file: ['**/docker*', '**/deploy*', '**/cloudflare**', '**/wrangler.toml', '**/nginx*']
+
+# Cruz Theorem Components
+quantum:
+  - changed-files:
+    - any-glob-to-any-file: ['**/violet-af-quantum-agent/**', '**/quantum**', '**/qiskit**']
+
+cruz-algebra:
+  - changed-files:
+    - any-glob-to-any-file: ['**/cruz-algebra/**', '**/*cruz*', '**/matlab/**']
+
+# Documentation
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.md', '**/docs/**', '**/*.rst', '**/*.txt']
+
+# Sovereignty and Control
+sovereign:
+  - changed-files:
+    - any-glob-to-any-file: ['**/README.md', '.github/**', '**/sovereignty**', '**/ownership**']
+
+# Frontend and Pages
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: ['**/pages-frontend/**', '**/*.html', '**/*.css', '**/*.js']
+
+# Backend and API
+backend:
+  - changed-files:
+    - any-glob-to-any-file: ['**/*.py', '**/api/**', '**/hub/**', '**/fastapi**']
+
+# Dependencies and Configuration
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file: ['**/requirements.txt', '**/package.json', '**/Pipfile', '**/pyproject.toml']
+
+# Automation and Workflows
+automation:
+  - changed-files:
+    - any-glob-to-any-file: ['.github/workflows/**', '**/automation/**', '**/ci/**', '**/cd/**']
+
+# Critical System Files
+critical:
+  - changed-files:
+    - any-glob-to-any-file: ['.github/workflows/auto-maintain.yml', '.github/workflows/codeql-analysis.yml', '.github/workflows/secrets-scan.yml']

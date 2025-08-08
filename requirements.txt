@@ -5,3 +5,12 @@ rq==1.16.2
 web3==6.20.1
 requests==2.32.3
 chromadb==0.5.5
+qiskit==1.2.4
+qiskit-aer==0.15.1
+numpy==1.24.3
+scipy==1.11.4
+matplotlib==3.7.2
+ipfs-python-api==0.3.0
+cryptography==42.0.5
+pydantic==2.8.2
+python-dotenv==1.0.1

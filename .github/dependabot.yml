@@ -1,0 +1,120 @@
+# Dependabot Configuration for Cruz Theorem Sovereignty Repository
+# Creator UID: ALC-ROOT-1010-1111-XCOV∞
+# Sovereign Owner: allcatch37@gmail.com
+
+version: 2
+
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "02:00"
+    reviewers:
+      - "allcatch37"
+    assignees:
+      - "allcatch37"
+    commit-message:
+      prefix: "deps(python):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+      - "auto-merge-safe"
+    open-pull-requests-limit: 5
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      # Ignore major version updates for critical dependencies
+      - dependency-name: "qiskit"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "fastapi"
+        update-types: ["version-update:semver-major"]
+
+  # Python dependencies in violet-af-quantum-agent
+  - package-ecosystem: "pip"
+    directory: "/violet-af-quantum-agent"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "02:00"
+    reviewers:
+      - "allcatch37"
+    assignees:
+      - "allcatch37"
+    commit-message:
+      prefix: "deps(quantum):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "quantum"
+      - "violet-af"
+      - "security-review-required"
+    open-pull-requests-limit: 3
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "02:00"
+    reviewers:
+      - "allcatch37"
+    assignees:
+      - "allcatch37"
+    commit-message:
+      prefix: "deps(actions):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "automation"
+      - "security-review-required"
+    open-pull-requests-limit: 3
+
+  # NPM dependencies (for future frontend components)
+  - package-ecosystem: "npm"
+    directory: "/pages-frontend"
+    schedule:
+      interval: "weekly"
+      day: "thursday"
+      time: "02:00"
+    reviewers:
+      - "allcatch37"
+    assignees:
+      - "allcatch37"
+    commit-message:
+      prefix: "deps(frontend):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "frontend"
+      - "auto-merge-safe"
+    open-pull-requests-limit: 5
+    ignore:
+      # Ignore dev dependencies for major version updates
+      - dependency-type: "development"
+        update-types: ["version-update:semver-major"]
+
+  # Docker dependencies (for future containerization)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "02:00"
+    reviewers:
+      - "allcatch37"
+    assignees:
+      - "allcatch37"
+    commit-message:
+      prefix: "deps(docker):"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "infrastructure"
+      - "security-review-required"
+    open-pull-requests-limit: 2

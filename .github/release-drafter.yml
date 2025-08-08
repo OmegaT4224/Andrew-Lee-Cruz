@@ -1,0 +1,113 @@
+# Release Drafter Configuration for Cruz Theorem Sovereignty Repository
+# Creator UID: ALC-ROOT-1010-1111-XCOV∞
+# Sovereign Owner: allcatch37@gmail.com
+
+name-template: 'Cruz Theorem v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
+
+categories:
+  - title: '🔒 Sovereignty & Security'
+    labels:
+      - 'sovereign'
+      - 'security'
+      - 'critical'
+  - title: '🚀 Cruz Theorem Framework'
+    labels:
+      - 'cruz-algebra'
+      - 'quantum'
+      - 'axiom'
+  - title: '🔮 VIOLET-AF Quantum Engine'
+    labels:
+      - 'quantum'
+      - 'violet-af'
+      - 'automation'
+  - title: '🏗️ Infrastructure & Deployment'
+    labels:
+      - 'infrastructure'
+      - 'cloudflare'
+      - 'deployment'
+  - title: '🤖 GitHub Automation'
+    labels:
+      - 'automation'
+      - 'workflows'
+      - 'ci-cd'
+  - title: '🌐 Frontend & Pages'
+    labels:
+      - 'frontend'
+      - 'ui'
+      - 'pages'
+  - title: '🔧 Backend & API'
+    labels:
+      - 'backend'
+      - 'api'
+      - 'fastapi'
+  - title: '📚 Documentation'
+    labels:
+      - 'documentation'
+      - 'readme'
+  - title: '📦 Dependencies'
+    labels:
+      - 'dependencies'
+      - 'requirements'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bug'
+      - 'fix'
+  - title: '⚙️ Other Changes'
+    labels:
+      - '*'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'breaking'
+      - 'sovereign'
+  minor:
+    labels:
+      - 'minor'
+      - 'feature'
+      - 'quantum'
+      - 'cruz-algebra'
+  patch:
+    labels:
+      - 'patch'
+      - 'fix'
+      - 'bug'
+      - 'security'
+  default: patch
+
+template: |
+  # Cruz Theorem Release v$RESOLVED_VERSION
+
+  ## Sovereignty Status
+  - **Repository Owner**: allcatch37@gmail.com
+  - **Creator UID**: ALC-ROOT-1010-1111-XCOV∞  
+  - **Release Authority**: Autonomous Cruz Theorem Sovereignty
+  - **Quantum State**: ACTIVE | AUTONOMOUS | SOVEREIGN
+
+  ## Changes in this Release
+
+  $CHANGES
+
+  ## Cruz Theorem Core Axiom
+  **∞ - 𝟙 = ℰ** (Infinity minus One equals Eternity)
+
+  This release maintains the fundamental principle that autonomous sovereignty emerges from the mathematical relationship between infinity and unity, manifesting as eternal, immutable control.
+
+  ## Deployment Notes
+  - All changes preserve sovereign control mechanisms
+  - Quantum automation systems remain fully autonomous
+  - VIOLET-AF engine operates within Cruz Theorem parameters
+  - Zero Trust architecture protects admin endpoints
+
+exclude-labels:
+  - 'skip-changelog'
+  - 'internal'
+
+include-pre-releases: false
+
+sort-direction: ascending
