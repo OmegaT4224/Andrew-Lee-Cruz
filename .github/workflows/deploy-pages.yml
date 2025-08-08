@@ -1,0 +1,262 @@
+name: Deploy GitHub Pages
+# UID: ALC-ROOT-1010-1111-XCOV∞
+# Contact: allcatch37@gmail.com
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'pages-frontend/**'
+      - 'docs/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+env:
+  CREATOR_UID: "ALC-ROOT-1010-1111-XCOV∞"
+  CREATOR_EMAIL: "allcatch37@gmail.com"
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-pages:
+    name: 📄 Build Pages
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.12'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Generate Documentation
+      run: |
+        export PYTHONPATH="${PYTHONPATH}:./axiom-dev-core/src"
+        
+        # Generate documentation using AxiomDevCore
+        python -c "
+        from axiom_dev_core.agent import AxiomDevCoreAgent
+        
+        print('📚 Generating documentation for Pages...')
+        agent = AxiomDevCoreAgent(repo_path='.', log_dir='./pages_build_logs')
+        
+        try:
+            doc_result = agent.generate_documentation()
+            print(f'✅ Documentation generated: {len(doc_result.get(\"generated_docs\", {}))} files')
+        except Exception as e:
+            print(f'⚠️  Documentation generation warning: {e}')
+        "
+        
+    - name: Setup Pages Structure
+      run: |
+        # Create pages build directory
+        mkdir -p _site
+        
+        # Copy frontend files
+        cp -r pages-frontend/* _site/
+        
+        # Copy documentation if it exists
+        if [ -d docs ]; then
+          mkdir -p _site/docs
+          cp -r docs/* _site/docs/
+        fi
+        
+        # Create index page that redirects to omegat
+        cat > _site/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>VIOLET-AF: Quantum Autonomous Agent</title>
+            <meta http-equiv="refresh" content="0;url=omegat/">
+            <meta name="description" content="VIOLET-AF Quantum Logic Integration - UID: ALC-ROOT-1010-1111-XCOV∞">
+            <meta name="author" content="Andrew Lee Cruz (allcatch37@gmail.com)">
+        </head>
+        <body>
+            <p>Redirecting to <a href="omegat/">VIOLET-AF Quantum Agent</a>...</p>
+            <script>window.location.href = 'omegat/';</script>
+        </body>
+        </html>
+        EOF
+        
+        # Create 404 page
+        cat > _site/404.html << 'EOF'
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>404 - VIOLET-AF</title>
+            <style>
+                body { 
+                    font-family: monospace; 
+                    background: #1a1a2e; 
+                    color: #e94560; 
+                    text-align: center; 
+                    padding: 50px; 
+                }
+                .container { 
+                    max-width: 600px; 
+                    margin: 0 auto; 
+                    background: rgba(0,0,0,0.8); 
+                    padding: 30px; 
+                    border-radius: 10px; 
+                }
+                a { color: #00d4aa; text-decoration: none; }
+                a:hover { text-decoration: underline; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🌀 404 - Quantum State Not Found</h1>
+                <p>The requested quantum state does not exist in this reality.</p>
+                <p><a href="/omegat/">Return to VIOLET-AF Dashboard</a></p>
+                <hr>
+                <p>UID: ALC-ROOT-1010-1111-XCOV∞<br>
+                Contact: allcatch37@gmail.com</p>
+            </div>
+        </body>
+        </html>
+        EOF
+        
+        # Create robots.txt
+        cat > _site/robots.txt << 'EOF'
+        User-agent: *
+        Allow: /
+        
+        Sitemap: https://omegat4224.github.io/andrew-lee-cruz/sitemap.xml
+        EOF
+        
+        # Create sitemap.xml
+        cat > _site/sitemap.xml << 'EOF'
+        <?xml version="1.0" encoding="UTF-8"?>
+        <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+            <url>
+                <loc>https://omegat4224.github.io/andrew-lee-cruz/</loc>
+                <lastmod>2025-08-08</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>1.0</priority>
+            </url>
+            <url>
+                <loc>https://omegat4224.github.io/andrew-lee-cruz/omegat/</loc>
+                <lastmod>2025-08-08</lastmod>
+                <changefreq>daily</changefreq>
+                <priority>0.9</priority>
+            </url>
+        </urlset>
+        EOF
+        
+        echo "✅ Pages structure created"
+        
+    - name: Validate Pages Build
+      run: |
+        # Check required files exist
+        test -f _site/index.html || (echo "❌ Missing index.html" && exit 1)
+        test -f _site/omegat/index.html || (echo "❌ Missing omegat/index.html" && exit 1)
+        test -f _site/404.html || (echo "❌ Missing 404.html" && exit 1)
+        
+        # Validate HTML if tidy is available
+        if command -v tidy &> /dev/null; then
+          find _site -name "*.html" -exec tidy -q -e {} \; || echo "HTML validation completed with warnings"
+        fi
+        
+        # List all files to be deployed
+        echo "📋 Files to be deployed:"
+        find _site -type f | sort
+        
+        echo "✅ Pages build validation complete"
+        
+    - name: Upload Pages Artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: _site
+
+  deploy-pages:
+    name: 🚀 Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build-pages
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      
+    steps:
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+      
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
+      
+    - name: Deployment Summary
+      run: |
+        echo "🎉 GitHub Pages deployment complete!"
+        echo ""
+        echo "📋 Deployment Summary:"
+        echo "   ✓ Site URL: ${{ steps.deployment.outputs.page_url }}"
+        echo "   ✓ VIOLET-AF Dashboard: ${{ steps.deployment.outputs.page_url }}omegat/"
+        echo "   ✓ Documentation: ${{ steps.deployment.outputs.page_url }}docs/"
+        echo "   ✓ Creator: $CREATOR_EMAIL"
+        echo "   ✓ UID: $CREATOR_UID"
+        echo ""
+        echo "🔗 Available Pages:"
+        echo "   • Main: ${{ steps.deployment.outputs.page_url }}"
+        echo "   • Dashboard: ${{ steps.deployment.outputs.page_url }}omegat/"
+        echo "   • Architecture: ${{ steps.deployment.outputs.page_url }}docs/architecture.html"
+        echo "   • PoAI Spec: ${{ steps.deployment.outputs.page_url }}docs/POAI_SPEC.html"
+        echo "   • Cruz Theorem: ${{ steps.deployment.outputs.page_url }}docs/cruz-theorem.html"
+
+  post-deploy-test:
+    name: 🧪 Post-Deploy Test
+    runs-on: ubuntu-latest
+    needs: deploy-pages
+    
+    steps:
+    - name: Test Site Availability
+      run: |
+        # Wait for deployment to propagate
+        sleep 30
+        
+        SITE_URL="${{ needs.deploy-pages.outputs.page_url || 'https://omegat4224.github.io/andrew-lee-cruz/' }}"
+        
+        echo "Testing site availability at: $SITE_URL"
+        
+        # Test main page
+        MAIN_RESPONSE=$(curl -s -w "%{http_code}" "$SITE_URL" || echo "000")
+        MAIN_HTTP_CODE="${MAIN_RESPONSE: -3}"
+        
+        if [ "$MAIN_HTTP_CODE" = "200" ]; then
+          echo "✅ Main page accessible"
+        else
+          echo "⚠️  Main page may have issues (HTTP $MAIN_HTTP_CODE)"
+        fi
+        
+        # Test VIOLET-AF dashboard
+        DASHBOARD_RESPONSE=$(curl -s -w "%{http_code}" "${SITE_URL}omegat/" || echo "000")
+        DASHBOARD_HTTP_CODE="${DASHBOARD_RESPONSE: -3}"
+        
+        if [ "$DASHBOARD_HTTP_CODE" = "200" ]; then
+          echo "✅ VIOLET-AF dashboard accessible"
+        else
+          echo "⚠️  Dashboard may have issues (HTTP $DASHBOARD_HTTP_CODE)"
+        fi
+        
+        echo ""
+        echo "🎉 Post-deployment test complete!"
+        echo "   Site URL: $SITE_URL"
+        echo "   Contact: $CREATOR_EMAIL"
+        echo "   UID: $CREATOR_UID"

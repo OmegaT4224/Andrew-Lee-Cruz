@@ -1,0 +1,116 @@
+{
+  "uid": "ALC-ROOT-1010-1111-XCOV\u221e",
+  "timestamp": 1754675600962,
+  "nonce": 2328944194,
+  "type": "violet_state_update",
+  "domain": "Kidhum",
+  "state_data": {
+    "violet_sequence_id": "VS_1754675600961",
+    "uid": "ALC-ROOT-1010-1111-XCOV\u221e",
+    "domain": "Kidhum",
+    "circuit_data": {
+      "qasm": "        \u250c\u2500\u2500\u2500\u2510                         \u250c\u2500\u2500\u2500\u2510 \u2591 \u250c\u2500\u2510      \n   q_0: \u2524 H \u251c\u2500\u2500\u25a0\u2500\u2500\u2500\u2500\u25a0\u2500\u2500\u2500\u2500\u25a0\u2500\u2500\u2500\u2500\u25a0\u2500\u2500\u2500\u2500\u25a0\u2500\u2500\u2524 Z \u251c\u2500\u2591\u2500\u2524M\u251c\u2500\u2500\u2500\u2500\u2500\u2500\n        \u2514\u2500\u2500\u2500\u2518\u250c\u2500\u2534\u2500\u2510\u250c\u2500\u2534\u2500\u2510\u250c\u2500\u2534\u2500\u2510\u250c\u2500\u2534\u2500\u2510\u250c\u2500\u2534\u2500\u2510\u2514\u2500\u2500\u2500\u2518 \u2591 \u2514\u2565\u2518\u250c\u2500\u2510   \n   q_1: \u2500\u2500\u2500\u2500\u2500\u2524 X \u251c\u2524 X \u251c\u2524 X \u251c\u2524 X \u251c\u2524 X \u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2591\u2500\u2500\u256b\u2500\u2524M\u251c\u2500\u2500\u2500\n        \u250c\u2500\u2500\u2500\u2510\u2514\u2500\u2500\u2500\u2518\u2514\u2500\u2500\u2500\u2518\u2514\u2500\u2500\u2500\u2518\u2514\u2500\u2500\u2500\u2518\u2514\u2500\u2500\u2500\u2518      \u2591  \u2551 \u2514\u2565\u2518\u250c\u2500\u2510\n   q_2: \u2524 Z \u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2591\u2500\u2500\u256b\u2500\u2500\u256b\u2500\u2524M\u251c\n        \u2514\u2500\u2500\u2500\u2518                               \u2591  \u2551  \u2551 \u2514\u2565\u2518\n   c: 3/\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u256c\u2550\u2550\u256c\u2550\u2550\u256c\u2550\n                                               \u2551  \u2551  \u2551 \nmeas: 3/\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2569\u2550\u2550\u2569\u2550\u2550\u2569\u2550\n                                               0  1  2 ",
+      "num_qubits": 3,
+      "depth": 8,
+      "operations": [
+        {
+          "gate": "H",
+          "qubits": [
+            0
+          ],
+          "description": "Initialize superposition"
+        },
+        {
+          "gate": "CNOT",
+          "qubits": [
+            0,
+            1
+          ],
+          "repetitions": 5,
+          "description": "Create symbolic task links"
+        },
+        {
+          "gate": "Z",
+          "qubits": [
+            0
+          ],
+          "description": "Apply log stamp"
+        },
+        {
+          "gate": "Z",
+          "qubits": [
+            2
+          ],
+          "description": "Apply log stamp"
+        }
+      ],
+      "uid": "ALC-ROOT-1010-1111-XCOV\u221e",
+      "domain": "Kidhum"
+    },
+    "quantum_result": {
+      "error": "'No statevector for experiment \"None\"'",
+      "success": true,
+      "fallback_used": true,
+      "statevector": {
+        "amplitudes": [
+          0.7071,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.7071,
+          0.0
+        ],
+        "probabilities": [
+          0.49999040999999994,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.49999040999999994,
+          0.0
+        ],
+        "measurement_outcomes": {
+          "000": 512,
+          "110": 512
+        }
+      },
+      "execution_time": 1754675600.9619322,
+      "shots": 1024,
+      "backend": "fallback_simulator",
+      "note": "Fallback simulation used - install Qiskit for full quantum support"
+    },
+    "task_tree": {
+      "root": {
+        "task": "violet.launch",
+        "uid": "ALC-ROOT-1010-1111-XCOV\u221e",
+        "domain": "Kidhum",
+        "priority": 0.49999040999999994,
+        "children": [
+          {
+            "task": "quantum_compile_000",
+            "quantum_state": "000",
+            "state_index": 0,
+            "priority": 0.5,
+            "entanglement_link": true,
+            "symbolic_weight": 0.49999040999999994
+          },
+          {
+            "task": "quantum_compile_110",
+            "quantum_state": "110",
+            "state_index": 6,
+            "priority": 0.5,
+            "entanglement_link": true,
+            "symbolic_weight": 0.49999040999999994
+          }
+        ]
+      }
+    },
+    "launch_command": "violet.launch",
+    "timestamp": 1754675600.9619489,
+    "status": "ready_for_launch"
+  },
+  "signature": "0218bbc7b0b0bb43ad92a82589d0c239094ddd216d59b7926b52ac4c0b8be176"
+}
