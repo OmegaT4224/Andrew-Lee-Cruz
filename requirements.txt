@@ -5,3 +5,5 @@ rq==1.16.2
 web3==6.20.1
 requests==2.32.3
 chromadb==0.5.5
+qiskit==1.1.1
+qiskit-aer==0.15.1
