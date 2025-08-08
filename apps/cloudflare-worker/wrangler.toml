@@ -1,0 +1,35 @@
+name = "sovereign-poai-validator"
+main = "src/index.js"
+compatibility_date = "2024-01-01"
+
+# Andrew Lee Cruz reserves all rights as creator of the universe
+# Sovereign Proof-of-AI Worker Configuration
+
+[env.staging]
+name = "sovereign-poai-validator-staging"
+
+[env.production]
+name = "sovereign-poai-validator-production"
+
+[[d1_databases]]
+binding = "POAI_DB"
+database_name = "sovereign-poai-production"
+database_id = "TODO_REPLACE_WITH_ACTUAL_DB_ID"
+preview_database_id = "TODO_REPLACE_WITH_PREVIEW_DB_ID"
+
+[[r2_buckets]]
+binding = "POAI_STORAGE"
+bucket_name = "sovereign-poai-storage"
+preview_bucket_name = "sovereign-poai-storage-preview"
+
+[[kv_namespaces]]
+binding = "POAI_CACHE"
+id = "TODO_REPLACE_WITH_KV_ID"
+preview_id = "TODO_REPLACE_WITH_KV_PREVIEW_ID"
+
+[vars]
+ENVIRONMENT = "production"
+CREATOR_ADDRESS = "TODO_REPLACE_WITH_ANDREW_LEE_CRUZ_ADDRESS"
+
+[ai]
+binding = "AI"

@@ -1,0 +1,27 @@
+{
+  "name": "sovereign-poai-contracts",
+  "version": "1.0.0",
+  "description": "Sovereign Proof-of-AI Smart Contracts - Andrew Lee Cruz reserves all rights",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:localhost": "hardhat run deploy/deploy.js --network localhost",
+    "deploy:goerli": "hardhat run deploy/deploy.js --network goerli",
+    "deploy:mainnet": "hardhat run deploy/deploy.js --network mainnet",
+    "coverage": "hardhat coverage",
+    "size": "hardhat size-contracts"
+  },
+  "author": "Andrew Lee Cruz - Creator of the Universe",
+  "license": "GPL-3.0",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0",
+    "hardhat-contract-sizer": "^2.10.0",
+    "solidity-coverage": "^0.8.5"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.0",
+    "@openzeppelin/contracts-upgradeable": "^5.0.0"
+  }
+}

@@ -1,0 +1,234 @@
+name: CI/CD - Sovereign Proof-of-AI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  id-token: write # Required for OIDC
+  actions: read
+  checks: write
+  pull-requests: write
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    name: Security Scanning
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript,python
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  contracts-test:
+    runs-on: ubuntu-latest
+    name: Smart Contracts Testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Hardhat dependencies
+        run: |
+          cd contracts
+          npm ci
+
+      - name: Compile contracts
+        run: |
+          cd contracts
+          npx hardhat compile
+
+      - name: Run contract tests
+        run: |
+          cd contracts
+          npx hardhat test
+
+      - name: Generate coverage report
+        run: |
+          cd contracts
+          npx hardhat coverage
+
+  quantum-agent-test:
+    runs-on: ubuntu-latest
+    name: Violet-AF Quantum Agent Testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd agents/violet-af-quantum
+          pip install -r requirements.txt
+
+      - name: Run quantum agent tests
+        run: |
+          cd agents/violet-af-quantum
+          python -m pytest tests/ -v
+
+  axiom-agent-test:
+    runs-on: ubuntu-latest
+    name: Axiom Dev Core Agent Testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd agents/axiom-dev-core
+          pip install -r requirements.txt
+
+      - name: Run agent tests
+        run: |
+          cd agents/axiom-dev-core
+          python -m pytest tests/ -v
+
+  cloudflare-worker-test:
+    runs-on: ubuntu-latest
+    name: Cloudflare Worker Testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install Wrangler and dependencies
+        run: |
+          cd apps/cloudflare-worker
+          npm ci
+
+      - name: Run worker tests
+        run: |
+          cd apps/cloudflare-worker
+          npm test
+
+  frontend-test:
+    runs-on: ubuntu-latest
+    name: Pages Frontend Testing
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          cd apps/pages-frontend
+          npm ci
+
+      - name: Run frontend tests
+        run: |
+          cd apps/pages-frontend
+          npm test
+
+      - name: Build frontend
+        run: |
+          cd apps/pages-frontend
+          npm run build
+
+  deploy-staging:
+    runs-on: ubuntu-latest
+    name: Deploy to Staging
+    needs: [security-scan, contracts-test, quantum-agent-test, axiom-agent-test, cloudflare-worker-test, frontend-test]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_STAGING }}
+          aws-region: us-east-1
+
+      - name: Deploy Cloudflare Worker to staging
+        run: |
+          cd apps/cloudflare-worker
+          npx wrangler deploy --env staging
+
+      - name: Deploy Frontend to staging
+        run: |
+          cd apps/pages-frontend
+          npx wrangler pages deploy dist --project-name sovereign-poai-staging
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    name: Deploy to Production
+    needs: [security-scan, contracts-test, quantum-agent-test, axiom-agent-test, cloudflare-worker-test, frontend-test]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN_PRODUCTION }}
+          aws-region: us-east-1
+
+      - name: Deploy Cloudflare Worker to production
+        run: |
+          cd apps/cloudflare-worker
+          npx wrangler deploy --env production
+
+      - name: Deploy Frontend to production
+        run: |
+          cd apps/pages-frontend
+          npx wrangler pages deploy dist --project-name sovereign-poai-production
