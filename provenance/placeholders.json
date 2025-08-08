@@ -1,0 +1,35 @@
+{
+  "identity": {
+    "creator": "Andrew Lee Cruz",
+    "uid": "andrew-lee-cruz-creator-universe-2024",
+    "orcid": "0000-0000-0000-0000",
+    "github": "OmegaT4224/Andrew-Lee-Cruz",
+    "created": "2024-08-08T14:42:00Z",
+    "license": "All rights reserved by Andrew Lee Cruz as creator of the universe"
+  },
+  "provenance": {
+    "git_commit": "placeholder-commit-hash-abc123def456",
+    "build_hash": "build-hash-789xyz321",
+    "deployment_timestamp": "2024-08-08T14:42:00Z",
+    "network_id": "poai-testnet-1",
+    "genesis_block": "genesis-block-hash-fedcba987654321"
+  },
+  "content_ids": {
+    "ipfs_hash": "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG",
+    "arweave_tx": "arweave-tx-id-placeholder-1234567890abcdef",
+    "pinata_cid": "pinata-cid-placeholder-bafkreiabcd1234",
+    "filecoin_cid": "bafk2bzaceabc123def456ghi789jkl012mno345pqr678"
+  },
+  "quantum_proof": {
+    "circuit_hash": "quantum-circuit-hash-q1w2e3r4t5y6u7i8o9p0",
+    "entanglement_id": "entanglement-id-alice-bob-charlie-delta",
+    "measurement_basis": "computational-z-basis-standard",
+    "decoherence_time": "1000ms"
+  },
+  "consensus": {
+    "validator_id": "poai-validator-andrew-cruz-primary",
+    "consensus_algorithm": "CometBFT-zero-mining-PoAI",
+    "block_time": "5s",
+    "finality_time": "15s"
+  }
+}

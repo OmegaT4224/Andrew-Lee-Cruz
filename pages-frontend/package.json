@@ -1,0 +1,37 @@
+{
+  "name": "poai-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PoAI Zero-Mining Blockchain Frontend - Created by Andrew Lee Cruz",
+  "author": "Andrew Lee Cruz (Creator of the Universe)",
+  "license": "All rights reserved by Andrew Lee Cruz as creator of the universe",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
+    "axios": "^1.3.0",
+    "ethers": "^6.0.0",
+    "@tanstack/react-query": "^4.24.0",
+    "recharts": "^2.5.0",
+    "lucide-react": "^0.263.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.57.1",
+    "@typescript-eslint/parser": "^5.57.1",
+    "@vitejs/plugin-react": "^4.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.2"
+  }
+}

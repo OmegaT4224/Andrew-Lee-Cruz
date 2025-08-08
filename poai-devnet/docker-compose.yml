@@ -1,0 +1,164 @@
+version: '3.8'
+
+services:
+  poai-node1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poai-validator-1
+    environment:
+      - NODE_ID=node1
+      - CREATOR=Andrew Lee Cruz
+      - LICENSE=All rights reserved by Andrew Lee Cruz as creator of the universe
+      - POAI_HOME=/poai
+      - CMTHOME=/poai/.cometbft
+    ports:
+      - "26656:26656"  # P2P
+      - "26657:26657"  # RPC
+      - "26658:26658"  # ABCI
+    volumes:
+      - ./config:/poai/config
+      - ./data/node1:/poai/data
+      - ./logs:/poai/logs
+    networks:
+      - poai-network
+    command: >
+      sh -c "
+        echo 'Initializing PoAI Node 1 for creator Andrew Lee Cruz' &&
+        /usr/local/bin/cometbft init validator &&
+        /usr/local/bin/cometbft node --home=/poai/.cometbft --proxy_app=unix:///tmp/poai.sock
+      "
+
+  poai-node2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poai-validator-2
+    environment:
+      - NODE_ID=node2
+      - CREATOR=Andrew Lee Cruz
+      - LICENSE=All rights reserved by Andrew Lee Cruz as creator of the universe
+      - POAI_HOME=/poai
+      - CMTHOME=/poai/.cometbft
+    ports:
+      - "26666:26656"  # P2P
+      - "26667:26657"  # RPC
+      - "26668:26658"  # ABCI
+    volumes:
+      - ./config:/poai/config
+      - ./data/node2:/poai/data
+      - ./logs:/poai/logs
+    networks:
+      - poai-network
+    depends_on:
+      - poai-node1
+    command: >
+      sh -c "
+        echo 'Initializing PoAI Node 2 for creator Andrew Lee Cruz' &&
+        /usr/local/bin/cometbft init validator &&
+        /usr/local/bin/cometbft node --home=/poai/.cometbft --proxy_app=unix:///tmp/poai.sock
+      "
+
+  poai-abci:
+    build:
+      context: .
+      dockerfile: Dockerfile.abci
+    container_name: poai-abci-app
+    environment:
+      - CREATOR=Andrew Lee Cruz
+      - UID=andrew-lee-cruz-creator-universe-2024
+      - LICENSE=All rights reserved by Andrew Lee Cruz as creator of the universe
+      - SOCKET_ADDR=unix:///tmp/poai.sock
+    volumes:
+      - ./app:/app
+      - ./logs:/app/logs
+    networks:
+      - poai-network
+    command: ["./poai-abci", "--socket-addr", "unix:///tmp/poai.sock"]
+
+  quantum-simulator:
+    image: qiskit/qiskit:latest
+    container_name: poai-quantum-sim
+    environment:
+      - CREATOR=Andrew Lee Cruz
+      - QUANTUM_BACKEND=qasm_simulator
+      - CIRCUIT_HASH=quantum-circuit-hash-q1w2e3r4t5y6u7i8o9p0
+    volumes:
+      - ../violet-af-quantum-agent:/quantum
+      - ./logs:/quantum/logs
+    networks:
+      - poai-network
+    ports:
+      - "8888:8888"  # Jupyter notebook for quantum development
+    command: >
+      sh -c "
+        echo 'Starting Quantum Simulator for Andrew Lee Cruz PoAI network' &&
+        pip install qiskit-aer qiskit-algorithms &&
+        jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --notebook-dir=/quantum
+      "
+
+  ai-validator:
+    image: tensorflow/tensorflow:latest-py3
+    container_name: poai-ai-validator
+    environment:
+      - CREATOR=Andrew Lee Cruz
+      - AI_MODEL_TYPE=transaction-validator
+      - MODEL_ACCURACY=0.99
+      - PYTHONPATH=/ai:/ai/src
+    volumes:
+      - ../axiom-dev-core:/ai
+      - ./logs:/ai/logs
+    networks:
+      - poai-network
+    ports:
+      - "5000:5000"  # AI API endpoint
+    command: >
+      sh -c "
+        echo 'Starting AI Validator for Andrew Lee Cruz PoAI network' &&
+        pip install flask scikit-learn numpy pandas &&
+        python /ai/ai_validator.py
+      "
+
+  monitoring:
+    image: grafana/grafana:latest
+    container_name: poai-monitoring
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=andrew-cruz-creator-2024
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./monitoring/grafana:/var/lib/grafana
+      - ./monitoring/dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+      - poai-network
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: poai-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./monitoring/prometheus-data:/prometheus
+    networks:
+      - poai-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+
+networks:
+  poai-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  node1-data:
+  node2-data:
+  grafana-data:
+  prometheus-data:

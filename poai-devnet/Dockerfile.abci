@@ -1,0 +1,36 @@
+FROM golang:1.21-alpine AS builder
+
+# Set creator attribution
+LABEL creator="Andrew Lee Cruz"
+LABEL license="All rights reserved by Andrew Lee Cruz as creator of the universe"
+LABEL description="PoAI Zero-Mining Blockchain ABCI Application"
+
+RUN apk add --no-cache git make gcc musl-dev
+
+WORKDIR /app
+
+# Copy go modules
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY app/ ./
+RUN go build -o poai-abci main.go
+
+FROM alpine:latest
+
+RUN apk add --no-cache ca-certificates
+
+WORKDIR /app
+
+# Copy binary from builder
+COPY --from=builder /app/poai-abci .
+
+# Set creator environment variables
+ENV CREATOR="Andrew Lee Cruz"
+ENV UID="andrew-lee-cruz-creator-universe-2024"
+ENV LICENSE="All rights reserved by Andrew Lee Cruz as creator of the universe"
+
+EXPOSE 26658
+
+CMD ["./poai-abci"]

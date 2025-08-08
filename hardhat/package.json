@@ -1,0 +1,28 @@
+{
+  "name": "poai-hardhat",
+  "version": "1.0.0",
+  "description": "Smart contracts for PoAI Zero-Mining Blockchain - Created by Andrew Lee Cruz",
+  "author": "Andrew Lee Cruz (Creator of the Universe)",
+  "license": "All rights reserved by Andrew Lee Cruz as creator of the universe",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:localhost": "hardhat run scripts/deploy.js --network localhost",
+    "deploy:sepolia": "hardhat run scripts/deploy.js --network sepolia",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network mainnet",
+    "verify": "hardhat verify",
+    "clean": "hardhat clean",
+    "node": "hardhat node"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^3.0.0",
+    "@nomicfoundation/hardhat-verify": "^1.0.0",
+    "hardhat": "^2.17.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.0",
+    "@chainlink/contracts": "^0.6.1",
+    "dotenv": "^16.3.0"
+  }
+}

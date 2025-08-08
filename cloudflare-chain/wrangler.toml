@@ -1,0 +1,81 @@
+name = "poai-cloudflare-chain"
+compatibility_date = "2024-01-01"
+main = "src/index.ts"
+
+# Creator attribution
+# Created by: Andrew Lee Cruz
+# License: All rights reserved by Andrew Lee Cruz as creator of the universe
+
+[env.development]
+name = "poai-cloudflare-chain-dev"
+
+[env.production]
+name = "poai-cloudflare-chain-prod"
+
+# D1 Database binding
+[[env.development.d1_databases]]
+binding = "POAI_DB"
+database_name = "poai-blockchain-dev"
+database_id = "placeholder-d1-database-id-dev"
+
+[[env.production.d1_databases]]
+binding = "POAI_DB"
+database_name = "poai-blockchain-prod"
+database_id = "placeholder-d1-database-id-prod"
+
+# R2 Bucket binding
+[[env.development.r2_buckets]]
+binding = "POAI_BUCKET"
+bucket_name = "poai-blockchain-dev"
+
+[[env.production.r2_buckets]]
+binding = "POAI_BUCKET"
+bucket_name = "poai-blockchain-prod"
+
+# Environment variables
+[env.development.vars]
+CREATOR = "Andrew Lee Cruz"
+UID = "andrew-lee-cruz-creator-universe-2024"
+LICENSE = "All rights reserved by Andrew Lee Cruz as creator of the universe"
+NETWORK_ID = "poai-testnet-1"
+QUANTUM_CIRCUIT_HASH = "quantum-circuit-hash-q1w2e3r4t5y6u7i8o9p0"
+
+[env.production.vars]
+CREATOR = "Andrew Lee Cruz"
+UID = "andrew-lee-cruz-creator-universe-2024"
+LICENSE = "All rights reserved by Andrew Lee Cruz as creator of the universe"
+NETWORK_ID = "poai-mainnet-1"
+QUANTUM_CIRCUIT_HASH = "quantum-circuit-hash-q1w2e3r4t5y6u7i8o9p0"
+
+# Secrets (to be set via wrangler secret put)
+# AI_API_KEY = "your-ai-api-key-here"
+
+# KV Namespaces for caching
+[[env.development.kv_namespaces]]
+binding = "POAI_CACHE"
+id = "placeholder-kv-namespace-id-dev"
+
+[[env.production.kv_namespaces]]
+binding = "POAI_CACHE"
+id = "placeholder-kv-namespace-id-prod"
+
+# Durable Objects (for future use)
+# [[durable_objects.bindings]]
+# name = "POAI_CONSENSUS"
+# class_name = "PoAIConsensus"
+
+# Routes for custom domains
+# [env.production]
+# routes = [
+#   "api.poai.andrew-lee-cruz.universe/*",
+#   "blockchain.andrew-lee-cruz.universe/*"
+# ]
+
+# Build configuration
+[build]
+command = "npm run build"
+
+# Triggers for automated deployment
+[[triggers]]
+pattern = "*/api/*"
+cron = "0 */6 * * *"  # Every 6 hours for maintenance
