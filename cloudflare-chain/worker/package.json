@@ -1,0 +1,42 @@
+{
+  "name": "cruz-theorem-sovereign-worker",
+  "version": "1.0.0",
+  "description": "Cloudflare Worker for Cruz Theorem Sovereignty Infrastructure",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --target=es2022 --outfile=dist/index.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "cloudflare-worker",
+    "cruz-theorem",
+    "sovereignty",
+    "quantum-automation",
+    "typescript"
+  ],
+  "author": "allcatch37@gmail.com",
+  "license": "Sovereign",
+  "creator_uid": "ALC-ROOT-1010-1111-XCOV∞",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240512.0",
+    "@types/node": "^20.12.12",
+    "esbuild": "^0.21.4",
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0",
+    "wrangler": "^3.57.1"
+  },
+  "dependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmegaT4224/Andrew-Lee-Cruz.git",
+    "directory": "cloudflare-chain/worker"
+  }
+}

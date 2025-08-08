@@ -1,0 +1,79 @@
+# Cloudflare Worker Configuration for Cruz Theorem Sovereignty Infrastructure
+# Creator UID: ALC-ROOT-1010-1111-XCOV∞
+# Sovereign Owner: allcatch37@gmail.com
+
+name = "cruz-theorem-sovereign-worker"
+main = "worker/src/index.ts"
+compatibility_date = "2024-08-08"
+account_id = "" # To be configured with actual Cloudflare account
+
+# Sovereignty and Creator Identity Variables
+[vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+SOVEREIGNTY_STATUS = "SOVEREIGN | IMMUTABLE | LIVE"
+CRUZ_AXIOM = "∞ - 𝟙 = ℰ"
+FRAMEWORK_VERSION = "1.0.0"
+
+# Environment-specific configurations
+[env.production]
+name = "cruz-theorem-sovereign-worker"
+route = { pattern = "*.kidhum.com/*", zone_name = "kidhum.com" }
+
+[env.staging]
+name = "cruz-theorem-sovereign-worker-staging"
+
+# Zero Trust Protection for Admin Endpoints
+# Note: These routes require Cloudflare Zero Trust configuration
+# Protected endpoints: /init, /mint, /setProvenance
+[env.production.routes]
+pattern = "*.kidhum.com/admin/*"
+zone_name = "kidhum.com"
+custom_domain = true
+
+# KV Namespace for sovereignty data storage
+[[kv_namespaces]]
+binding = "SOVEREIGNTY_STORE"
+id = "" # To be configured with actual KV namespace ID
+preview_id = "" # To be configured with preview namespace ID
+
+# R2 Storage for provenance and IPFS backup
+[[r2_buckets]]
+binding = "PROVENANCE_STORAGE"
+bucket_name = "cruz-theorem-provenance"
+preview_bucket_name = "cruz-theorem-provenance-preview"
+
+# Durable Objects for ReflectChain state management
+[[migrations]]
+tag = "v1"
+new_classes = ["CruzReflectChain"]
+
+[[durable_objects.bindings]]
+name = "REFLECT_CHAIN"
+class_name = "CruzReflectChain"
+
+# Analytics and monitoring
+[observability]
+enabled = true
+
+# Custom domains for sovereignty endpoints
+[triggers]
+crons = ["0 2 * * *"] # Daily sovereignty verification at 2 AM UTC
+
+# Build configuration
+[build]
+command = "npm run build"
+cwd = "worker"
+
+# Development configuration
+[dev]
+ip = "0.0.0.0"
+port = 8787
+local_protocol = "http"
+
+# Compatibility flags for modern features
+compatibility_flags = ["nodejs_compat"]
+
+# Rate limiting for sovereignty protection
+[limits]
+cpu_ms = 50 # Limit CPU usage per request

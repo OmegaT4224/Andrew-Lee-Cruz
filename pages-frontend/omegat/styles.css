@@ -1,0 +1,72 @@
+/* 
+Cruz Theorem Sovereignty Infrastructure - Additional Styles
+Creator UID: ALC-ROOT-1010-1111-XCOV∞
+Sovereign Owner: allcatch37@gmail.com
+*/
+
+/* Animation for sovereignty badge */
+@keyframes sovereignty-glow {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+    50% {
+        box-shadow: 0 6px 25px rgba(255, 107, 107, 0.6);
+    }
+}
+
+.sovereignty-badge {
+    animation: sovereignty-glow 3s ease-in-out infinite;
+}
+
+/* Quantum state hover effects */
+.quantum-state:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+
+/* Enhanced card hover effects */
+.info-card:hover {
+    border-color: #7b68ee;
+    box-shadow: 0 12px 40px rgba(123, 104, 238, 0.3);
+}
+
+/* Contact info highlight */
+.contact-item:hover {
+    background: rgba(231, 76, 60, 0.2);
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .header {
+        padding: 20px 0;
+    }
+    
+    .sovereignty-contact {
+        padding: 20px;
+    }
+    
+    .info-card {
+        padding: 20px;
+    }
+}
+
+/* Print styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .sovereignty-badge,
+    .status-indicator {
+        background: #f0f0f0;
+        color: black;
+        border: 1px solid #ccc;
+    }
+}
