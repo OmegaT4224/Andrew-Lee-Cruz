@@ -1,0 +1,11 @@
+<MacroDroid>
+  <Macro>
+    <Name>Royalty Received Voice</Name>
+    <Trigger type="VoiceTrigger">
+      <Phrase>royalty received</Phrase>
+    </Trigger>
+    <Action type="RunShell">
+      <Command>am broadcast -a AX.ROYALTY --es usd "2500" --es price "2500"</Command>
+    </Action>
+  </Macro>
+</MacroDroid>
