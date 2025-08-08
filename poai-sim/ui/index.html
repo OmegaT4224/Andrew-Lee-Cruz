@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIOLET-AF PoAI Simulator</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">
+                        <div class="quantum-icon">⚛</div>
+                        <div class="logo-text">
+                            <h1>VIOLET-AF PoAI Simulator</h1>
+                            <p>Development & Testing Environment</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="connection-status">
+                        <div id="connectionIndicator" class="status-indicator offline"></div>
+                        <span id="connectionText">Connecting...</span>
+                    </div>
+                    <button id="refreshBtn" class="btn btn-primary">Refresh</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Status Cards -->
+            <section class="status-grid">
+                <div class="status-card">
+                    <div class="card-header">
+                        <h3>Total Devices</h3>
+                        <div class="icon">📱</div>
+                    </div>
+                    <div class="card-value" id="totalDevices">--</div>
+                </div>
+                <div class="status-card">
+                    <div class="card-header">
+                        <h3>Online Devices</h3>
+                        <div class="icon">🟢</div>
+                    </div>
+                    <div class="card-value" id="onlineDevices">--</div>
+                </div>
+                <div class="status-card">
+                    <div class="card-header">
+                        <h3>Energy Compliant</h3>
+                        <div class="icon">⚡</div>
+                    </div>
+                    <div class="card-value" id="energyCompliant">--</div>
+                </div>
+                <div class="status-card">
+                    <div class="card-header">
+                        <h3>Total Submissions</h3>
+                        <div class="icon">📊</div>
+                    </div>
+                    <div class="card-value" id="totalSubmissions">--</div>
+                </div>
+            </section>
+
+            <!-- Device Control Panel -->
+            <section class="control-panel">
+                <h2>Device Control Panel</h2>
+                <div class="devices-grid" id="devicesGrid">
+                    <!-- Device cards will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- PoAI Testing -->
+            <section class="testing-panel">
+                <h2>PoAI Testing</h2>
+                <div class="test-controls">
+                    <div class="test-form">
+                        <label for="deviceSelect">Select Device:</label>
+                        <select id="deviceSelect">
+                            <option value="">Select a device...</option>
+                        </select>
+                        
+                        <label for="inputData">Input Data:</label>
+                        <textarea id="inputData" placeholder="Enter test input data (JSON format recommended)">
+{
+  "test_type": "quantum_simulation",
+  "quantum_state": "|0⟩ + |1⟩",
+  "entanglement": true,
+  "measurements": 1024,
+  "creator_uid": "ALC-ROOT-1010-1111-XCOV∞"
+}</textarea>
+                        
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="forceComputation">
+                                Force computation (bypass energy policy)
+                            </label>
+                        </div>
+                        
+                        <button id="submitPoAI" class="btn btn-primary btn-large">Submit PoAI Computation</button>
+                    </div>
+                    
+                    <div class="test-results">
+                        <h3>Recent Submissions</h3>
+                        <div id="submissionsList" class="submissions-list">
+                            <!-- Submissions will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Log -->
+            <section class="log-panel">
+                <h2>Real-time Activity Log</h2>
+                <div class="log-controls">
+                    <button id="clearLog" class="btn btn-secondary">Clear Log</button>
+                    <label>
+                        <input type="checkbox" id="autoScroll" checked>
+                        Auto-scroll
+                    </label>
+                </div>
+                <div id="activityLog" class="activity-log">
+                    <!-- Log entries will be populated by JavaScript -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                VIOLET-AF: Autonomous Quantum Logic Initialization & PoAI Stack v1.0.0<br>
+                Created by Andrew Lee Cruz (UID: ALC-ROOT-1010-1111-XCOV∞, ORCID: 0009-0000-3695-1084)<br>
+                Licensed under UCL-∞
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modal for device details -->
+    <div id="deviceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalDeviceName">Device Details</h3>
+                <button id="closeModal" class="btn btn-close">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Device details will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/main.js"></script>
+</body>
+</html>
