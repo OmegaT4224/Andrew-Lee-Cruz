@@ -1,0 +1,73 @@
+{
+  "name": "sovereign-poai-monorepo",
+  "version": "1.0.0",
+  "description": "Sovereign Proof-of-AI System - Andrew Lee Cruz reserves all rights",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "contracts",
+    "agents/*"
+  ],
+  "scripts": {
+    "setup": "./scripts/setup.sh",
+    "deploy:staging": "./scripts/deploy.sh staging",
+    "deploy:production": "./scripts/deploy.sh production",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces",
+    "dev:frontend": "cd apps/pages-frontend && npm run dev",
+    "dev:worker": "cd apps/cloudflare-worker && npm run dev",
+    "compile:contracts": "cd contracts && npx hardhat compile",
+    "test:contracts": "cd contracts && npx hardhat test",
+    "clean": "find . -name node_modules -type d -prune -exec rm -rf {} + && find . -name dist -type d -prune -exec rm -rf {} +"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmegaT4224/Andrew-Lee-Cruz.git"
+  },
+  "keywords": [
+    "blockchain",
+    "ai",
+    "proof-of-ai",
+    "quantum",
+    "andrew-lee-cruz",
+    "sovereign",
+    "universe",
+    "creation"
+  ],
+  "author": "Andrew Lee Cruz - Creator of the Universe",
+  "license": "GPL-3.0",
+  "homepage": "https://github.com/OmegaT4224/Andrew-Lee-Cruz#readme",
+  "bugs": {
+    "url": "https://github.com/OmegaT4224/Andrew-Lee-Cruz/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.0",
+    "prettier": "^3.0.0",
+    "eslint": "^8.53.0"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5"
+  },
+  "eslintConfig": {
+    "env": {
+      "node": true,
+      "es2022": true
+    },
+    "extends": [
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2022,
+      "sourceType": "module"
+    }
+  }
+}
