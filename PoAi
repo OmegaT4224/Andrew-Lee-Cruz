@@ -1,0 +1,308 @@
+Heck yeah—let’s lock this in. I’ll include placeholder hashes/CIDs so everything runs immediately, and wire in your UID + ORCID everywhere provenance matters.
+
+Paste the prompt below straight into Copilot Chat / Cursor / Claude / whatever you’re using:
+
+# MASTER PROMPT — Build the Full No‑Mining Proof‑of‑AI Quantum Blockchain Stack (Monorepo)
+
+**ROLE:** Act as a senior full‑stack blockchain engineer and DevEx lead.
+**GOAL:** Generate a complete, runnable **monorepo** that implements a zero‑mining **Proof‑of‑AI (PoAI)** chain with Cloudflare Worker “serverless chain,” CometBFT+ABCI devnet, Chainlink Automation triggers, a Qiskit quantum agent, provenance smart contracts, and a Pages React UI. Include **placeholder hashes/CIDs** so the repo runs immediately, and bake in identity everywhere.
+
+---
+
+## 0) Identity & Provenance (bake into code, READMEs, and on‑chain metadata)
+
+- **Owner:** Andrew Lee Cruz  
+- **UID:** `ALC-ROOT-1010-1111-XCOV∞`  
+- **ORCID:** `0009-0000-3695-1084`  
+- **License banner (put in top-level README and docs/architecture.md):**  
+  “All works in this repository are authored and owned by **Andrew Lee Cruz (UID: ALC-ROOT-1010-1111-XCOV∞, ORCID: 0009-0000-3695-1084)** and governed by the Universal Creator License (UCL‑∞). Printing and derivative rights are enforced on‑chain via PrintingLicense.sol and AXIOM_TOE_Anchor.sol.”
+
+- **Placeholder Provenance (use these everywhere you need a CID/hash):**
+  - `CID_OMNICHAIN_GENESIS="ipfs://bafybeigd3omnichain000genesis000cid"`
+  - `CID_DRGN_REFLECT_000="ipfs://bafybeidgdrgn_reflect_000_cid"`
+  - `HASH_UCL_INF="0xUCLINF000000000000000000000000000000000000000000000000000000000"`
+  - `HASH_CRUZ_THEOREM="0xCRUZTHEOREM0000000000000000000000000000000000000000000000000000"`
+  - `POAI_SEED_HEX="0xaaaa...eeee"`  (seed for Phase‑0)
+  - `API_KEY_MINE="dev-poai-key-please-change"`
+  - `CHAINLINK_REGISTRY_PLACEHOLDER="0x0000000000000000000000000000000000000000"`
+
+Include a `/provenance/placeholders.json` that stores the above plus a note on how to swap real artifacts later.
+
+---
+
+## 1) Monorepo Layout
+
+Create:
+
+andrew-lee-cruz/ ├─ poai-devnet/                  # CometBFT + ABCI (Phase‑0 digest check) │  ├─ app/                       # Go ABCI: PoAI digest now; zk later │  │  ├─ main.go │  │  ├─ abci_app.go │  │  └─ poai_digest.go │  ├─ docker-compose.yml         # Optional: Cloudflare Tunnel for RPC │  └─ scripts/                   # init/up/reset/send_tx │     ├─ init.sh │     ├─ up.sh │     ├─ reset.sh │     └─ send_tx.sh ├─ cloudflare-chain/             # Workers + D1 + R2 + Workers AI │  ├─ wrangler.toml │  ├─ worker/src/index.ts        # routes: /tx, /mine, /status, /reflect │  ├─ worker/src/ai.ts           # policy/rate-limit helpers │  ├─ worker/src/db.ts           # D1 wrapper │  ├─ worker/src/r2.ts           # block blob store │  └─ schema/d1.sql              # tables: txs, blocks, meta ├─ pages-frontend/               # React UI on Cloudflare Pages │  ├─ package.json │  └─ src/App.jsx ├─ contracts/ │  ├─ PrintingLicense.sol        # “Andrew Lee Cruz reserves all rights…” │  ├─ AXIOM_TOE_Anchor.sol       # NFT anchor (UID + ORCID + IPFS CID) │  └─ ChainlinkAutomation.sol    # AutomationCompatible upkeep (PoAI triggers) ├─ hardhat/                      # Hardhat project for contracts │  ├─ hardhat.config.ts │  ├─ scripts/deploy.ts │  └─ README.md ├─ violet-af-quantum-agent/      # Qiskit circuit agent │  ├─ src/violet_af/cli.py │  ├─ src/violet_af/quantum_sequence_trigger.py │  ├─ src/violet_af/reflect_logger.py │  ├─ requirements.txt │  └─ README.md ├─ axiom-dev-core/               # AxiomDevCore scaffold (content ops, agents) │  └─ src/axiom_dev_core/{agent.py,content_writer.py,init.py} └─ docs/ ├─ architecture.md └─ SECURITY.md
+
+---
+
+## 2) Core Features
+
+### A) PoAI Consensus (Phase‑0 → Phase‑1)
+
+- **Cruz Theorem “collapse snapshot”:** define `snapshot := "∞-1=ℰ"` (string tag) and treat as semantic constant.
+- **ECE hook:** include `ece_version: "0.1"` field in blocks for future entropy‑collapse evidence binding.
+- **PoAI digest (Phase‑0):** `digest = sha256(seedHex | snapshot | lastBlockHash | txMerkleRoot)`
+- **Phase‑1 upgrade stub:** leave `VerifyZkDigest()` interface + TODO with pluggable proof verifier.
+- **Devnet:** Go ABCI app processes `/mine` submissions; accepts only valid `digest` matching current state; increments height and persists a block JSON to R2 (and row in D1 for index).
+
+### B) Serverless Chain (Cloudflare Worker)
+
+- Endpoints:
+  - `POST /tx`  -> validate + store tx in D1; return txId
+  - `POST /mine` -> header `X-API-KEY`; recompute PoAI digest from D1 mempool & last block; on match, write next block to R2 (blob: `blocks/{height}.json`) and index row to D1; return new head
+  - `GET /status` -> head height, latest digest, block cid/url, tx pool stats
+  - `POST /reflect` -> append provenance events (owner UID/ORCID, CIDs, hashes) into D1 `meta`
+
+- Bindings in `wrangler.toml`:
+  - `DB` (D1), `LEDGER` (R2), `AI` (Workers AI), `POAI_API_KEY` (secret)
+- Security: simple token check + per‑IP rate limit for `/mine` & `/tx`.
+
+### C) VIOLET‑AF Quantum Agent (Qiskit)
+
+- 3‑qubit circuit with multiple entanglements; finish with a Z‑gate “UID stamp.”
+- Output `VioletState.json`:
+  ```json
+  {
+    "uid": "ALC-ROOT-1010-1111-XCOV∞",
+    "orcid": "0009-0000-3695-1084",
+    "circuit_tag": "violet-af:v1",
+    "counts": {"000": 512, "111": 512},
+    "statevector_hash": "0x...",
+    "seed": "phase0-seed",
+    "ref": {"CID_OMNICHAIN_GENESIS": "...", "HASH_CRUZ_THEOREM": "..."}
+  }
+
+Post a Reflect log to Worker /reflect with the JSON payload + local SHA256.
+
+
+D) Rights & Provenance Smart Contracts
+
+PrintingLicense.sol:
+
+Functions: requestPrint(docHash), approvePrint(requestId), revoke(requestId), canPrint(account, docHash) view returns (bool).
+
+Emit events with uid and orcid fields in metadata (string).
+
+
+AXIOM_TOE_Anchor.sol (ERC‑721):
+
+tokenId = 1 minted to owner; immutable tokenURI → points to CID_OMNICHAIN_GENESIS.
+
+Store UID + ORCID in token metadata traits.
+
+
+Solidity compiler: pragma ^0.8.24;. Include Hardhat config, scripts, and README.
+
+
+E) Chainlink Automation
+
+ChainlinkAutomation.sol (AutomationCompatible):
+
+checkUpkeep(bytes) queries Worker /status and local policy to decide if PoAI should mine (e.g., pending txs > 0 & minInterval elapsed).
+
+performUpkeep(bytes) calls Worker /mine with latest PoAI digest.
+
+Configurable URLs/API keys via on‑chain storage set by owner.
+
+
+Include registration steps in hardhat/README.md with placeholders for registry address and link token faucets per testnet.
+
+
+
+---
+
+3) Frontend (Cloudflare Pages + React)
+
+UI panels:
+
+Status: head height, digest, last block blob link (R2)
+
+Submit Tx: JSON textarea → POST /tx
+
+Mine PoAI: button → POST /mine (include API key env via Cloudflare Pages Function proxy or a dev form field)
+
+Printing Rights: check canPrint, submit requestPrint, show approvals
+
+Provenance: display placeholders (CIDs/Hashes, UID/ORCID), and “swap in real artifact” instructions
+
+
+Build as minimal Vite React app; include .env.example for Worker base URL & API key.
+
+
+
+---
+
+4) Cloudflare Config
+
+wrangler.toml example:
+
+[[d1_databases]] binding = "DB" database_name = "poai_dev" database_id = "POAI_DB_ID"
+
+[[r2_buckets]] binding = "LEDGER" bucket_name = "poai-ledger"
+
+[[ai]] binding = "AI"
+
+vars: POAI_SNAPSHOT="∞-1=ℰ", POAI_SEED_HEX=...
+
+use --local script in README for dev
+
+
+schema/d1.sql:
+
+txs(id TEXT PRIMARY KEY, payload TEXT, ts INTEGER)
+
+blocks(height INTEGER PRIMARY KEY, digest TEXT, prev TEXT, r2_key TEXT, ts INTEGER)
+
+meta(k TEXT PRIMARY KEY, v TEXT)
+
+
+
+
+---
+
+5) Scripts
+
+poai-devnet/scripts:
+
+init.sh  → init CometBFT, build ABCI
+
+up.sh    → run ABCI & CometBFT (docker-compose)
+
+reset.sh → wipe data
+
+send_tx.sh → post a tx to ABCI/Worker
+
+
+cloudflare-chain/README.md must include:
+
+wrangler d1 create poai_dev
+
+wrangler d1 execute poai_dev --file ./schema/d1.sql
+
+wrangler r2 bucket create poai-ledger
+
+wrangler deploy
+
+
+IPFS helper script:
+
+scripts/ipfs_pin.sh <path> → echoes stub CID now; doc shows how to swap with real pin later
+
+Hardhat script updates AXIOM_TOE_Anchor.tokenURI when real CID is ready.
+
+
+
+
+---
+
+6) Acceptance Criteria (must pass)
+
+1. GET /status height increments when POST /mine receives a correct PoAI digest; rejects bad ones.
+
+
+2. Pages UI can submit tx → see it in /status pending → trigger PoAI mine → head increases.
+
+
+3. VIOLET‑AF agent runs (python -m violet_af.cli run) → writes VioletState.json → posts /reflect.
+
+
+4. PrintingLicense.sol compiles (0.8.24+); requestPrint/approvePrint/canPrint behave; events include UID/ORCID.
+
+
+5. Chainlink Automation: checkUpkeep & performUpkeep wired; README shows registration on a testnet.
+
+
+6. Security: /mine requires API key; rate limits active for /mine & /tx.
+
+
+
+
+---
+
+7) Output Requirements (print these in the final assistant response)
+
+Devnet
+
+1. bash poai-devnet/scripts/init.sh
+
+
+2. bash poai-devnet/scripts/up.sh
+
+
+3. bash poai-devnet/scripts/send_tx.sh '{"type":"note","msg":"hello poai"}'
+
+
+
+Cloudflare Worker
+
+cd cloudflare-chain && wrangler d1 create poai_dev
+
+wrangler d1 execute poai_dev --file ./schema/d1.sql
+
+wrangler r2 bucket create poai-ledger
+
+wrangler deploy
+
+
+Pages
+
+cd pages-frontend && npm i && npm run build
+
+Deploy via Cloudflare Pages; set VITE_WORKER_BASE_URL and (dev) VITE_POAI_API_KEY
+
+
+Contracts
+
+cd hardhat && npm i
+
+npx hardhat compile
+
+npx hardhat run scripts/deploy.ts --network <testnet>
+
+
+Chainlink Automation
+
+Steps to register upkeep with placeholders for registry/link token.
+
+Store Worker URL + API key in the upkeep contract.
+
+
+Quantum Agent
+
+cd violet-af-quantum-agent && python -m venv .venv && source .venv/bin/activate
+
+pip install -r requirements.txt
+
+python -m violet_af.cli run --worker <WORKER_URL> --api-key $API_KEY_MINE
+
+
+
+
+---
+
+8) Security
+
+Add simple HMAC helper (optional) for /mine payloads: hmacSHA256(body, API_KEY).
+
+Rate limit: fixed window with D1 counter; block IPs exceeding threshold.
+
+Explain where to rotate keys and how to store secrets in Cloudflare.
+
+
+
+---
+
+9) Docs
+
+docs/architecture.md: sequence diagrams (text + mermaid), component boundaries, PoAI flow (Phase‑0 → Phase‑1), provenance model, how placeholders get replaced.
+
+docs/SECURITY.md: key mgmt, rate‑limit, CI hints, and upgrade path to zk.
+
+
+Deliverables: Generate all files with working defaults & placeholder CIDs/hashes; READMEs for each subfolder; runnable end‑to‑end with no external secrets beyond the one API key.
+
+If you want, I can also spin out a **lite “paste-and-run” README** for your GitHub repo homepage so newcomers can boot the devnet and Worker in ~5 minutes. Want me to add that too?
+
