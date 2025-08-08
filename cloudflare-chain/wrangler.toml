@@ -1,0 +1,20 @@
+name = "violet-af-quantum-worker"
+main = "worker/src/index.ts"
+compatibility_date = "2024-08-08"
+
+[env.production]
+name = "violet-af-quantum-worker"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "violet-af-quantum-db"
+database_id = "violet-af-quantum-db"
+
+[[env.production.r2_buckets]]
+binding = "QUANTUM_STORAGE"
+bucket_name = "violet-af-quantum-states"
+
+[vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+ENVIRONMENT = "production"
