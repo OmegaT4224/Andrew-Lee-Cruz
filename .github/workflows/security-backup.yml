@@ -1,0 +1,139 @@
+name: Security Audit & Backup
+
+on:
+  schedule:
+    - cron: '0 2 * * *' # Daily at 2 AM UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+  id-token: write # Required for OIDC
+
+jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    name: Comprehensive Security Audit
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run dependency vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+
+      - name: Audit npm packages
+        run: |
+          find . -name "package.json" -not -path "./node_modules/*" | while read package; do
+            echo "Auditing $(dirname $package)"
+            cd $(dirname $package)
+            npm audit --audit-level=moderate
+            cd - > /dev/null
+          done
+
+      - name: Audit Python packages
+        run: |
+          find . -name "requirements.txt" | while read req; do
+            echo "Auditing $(dirname $req)"
+            pip install safety
+            safety check -r $req
+          done
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+
+  backup-repository:
+    runs-on: ubuntu-latest
+    name: Repository Backup
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_BACKUP_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Create backup archive
+        run: |
+          DATE=$(date +%Y%m%d_%H%M%S)
+          tar -czf "sovereign-poai-backup-$DATE.tar.gz" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='*.pyc' \
+            --exclude='dist' \
+            --exclude='build' \
+            .
+
+      - name: Upload backup to S3
+        run: |
+          DATE=$(date +%Y%m%d_%H%M%S)
+          aws s3 cp "sovereign-poai-backup-$DATE.tar.gz" \
+            s3://${{ secrets.BACKUP_BUCKET }}/daily-backups/
+
+      - name: Cleanup old backups (keep last 30 days)
+        run: |
+          CUTOFF_DATE=$(date -d '30 days ago' +%Y%m%d)
+          aws s3 ls s3://${{ secrets.BACKUP_BUCKET }}/daily-backups/ | \
+          awk '{print $4}' | \
+          while read file; do
+            FILE_DATE=$(echo $file | grep -o '[0-9]\{8\}' | head -1)
+            if [[ $FILE_DATE < $CUTOFF_DATE ]]; then
+              aws s3 rm s3://${{ secrets.BACKUP_BUCKET }}/daily-backups/$file
+            fi
+          done
+
+  license-compliance:
+    runs-on: ubuntu-latest
+    name: License Compliance Check
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install license checker
+        run: npm install -g license-checker
+
+      - name: Check JavaScript licenses
+        run: |
+          find . -name "package.json" -not -path "./node_modules/*" | while read package; do
+            echo "Checking licenses in $(dirname $package)"
+            cd $(dirname $package)
+            npm ci
+            license-checker --summary
+            cd - > /dev/null
+          done
+
+      - name: Verify Andrew Lee Cruz attribution
+        run: |
+          # Check that all major files contain proper attribution
+          ATTRIBUTION_PATTERN="Andrew Lee Cruz"
+          FILES_TO_CHECK=("README.md" "LICENSE" "package.json")
+          
+          for file in "${FILES_TO_CHECK[@]}"; do
+            if [ -f "$file" ]; then
+              if ! grep -q "$ATTRIBUTION_PATTERN" "$file"; then
+                echo "ERROR: $file missing Andrew Lee Cruz attribution"
+                exit 1
+              fi
+            fi
+          done
+          
+          echo "✅ All files contain proper attribution to Andrew Lee Cruz"

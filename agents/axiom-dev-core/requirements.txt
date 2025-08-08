@@ -1,0 +1,77 @@
+# Axiom Dev Core Agent Requirements
+# Copyright (C) 2024 Andrew Lee Cruz - Creator of the Universe
+# Python content writer, GitHub agent, and reflection logger for Sovereign Proof-of-AI
+
+# Core framework and async
+aiohttp==3.9.0
+asyncio-mqtt==0.13.0
+click==8.1.0
+
+# GitHub integration
+PyGithub==1.59.0
+github3.py==4.0.0
+gitpython==3.1.0
+
+# Content generation and writing
+openai==1.3.0
+anthropic==0.7.0
+transformers==4.35.0
+langchain==0.0.350
+langchain-community==0.0.350
+
+# Natural language processing
+nltk==3.8.1
+spacy==3.7.0
+textblob==0.17.1
+
+# Data handling and storage
+pandas==2.1.0
+numpy==1.24.0
+sqlite3
+
+# Web scraping and content extraction
+beautifulsoup4==4.12.0
+requests==2.31.0
+selenium==4.15.0
+
+# Logging and monitoring
+structlog==23.2.0
+loguru==0.7.0
+
+# Configuration and environment
+python-dotenv==1.0.0
+pydantic==2.4.0
+PyYAML==6.0.1
+
+# Blockchain and crypto
+web3==6.11.0
+eth-account==0.9.0
+
+# AI and machine learning
+scikit-learn==1.3.0
+torch==2.1.0
+
+# File handling and formats
+python-docx==0.8.11
+PyPDF2==3.0.0
+openpyxl==3.1.0
+markdown==3.5.0
+
+# Testing and development
+pytest==7.4.0
+pytest-asyncio==0.21.0
+black==23.9.0
+flake8==6.0.0
+
+# Reflection and introspection
+inspect
+ast
+types-setuptools
+
+# Image and media processing
+Pillow==10.0.0
+matplotlib==3.8.0
+
+# Time and scheduling
+schedule==1.2.0
+python-crontab==3.0.0

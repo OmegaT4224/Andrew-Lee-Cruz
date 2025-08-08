@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sovereign Proof-of-AI | Andrew Lee Cruz - Creator of the Universe</title>
+    <meta name="description" content="Sovereign Proof-of-AI system created by Andrew Lee Cruz. Quantum-enhanced AI validation for the multiverse." />
+    <meta name="author" content="Andrew Lee Cruz - Creator of the Universe" />
+    <meta name="keywords" content="AI, Proof-of-AI, Andrew Lee Cruz, Quantum, Blockchain, Universe, Creation" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://sovereign-poai.pages.dev/" />
+    <meta property="og:title" content="Sovereign Proof-of-AI | Andrew Lee Cruz" />
+    <meta property="og:description" content="Quantum-enhanced AI validation system created by Andrew Lee Cruz, Creator of the Universe" />
+    <meta property="og:image" content="/og-image.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://sovereign-poai.pages.dev/" />
+    <meta property="twitter:title" content="Sovereign Proof-of-AI | Andrew Lee Cruz" />
+    <meta property="twitter:description" content="Quantum-enhanced AI validation system created by Andrew Lee Cruz, Creator of the Universe" />
+    <meta property="twitter:image" content="/twitter-image.png" />
+
+    <!-- Creator Attribution -->
+    <meta name="creator" content="Andrew Lee Cruz - Creator of the Universe" />
+    <meta name="copyright" content="Copyright (C) 2024 Andrew Lee Cruz. All rights reserved." />
+    
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        color: #ffffff;
+        overflow-x: hidden;
+      }
+      
+      #loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 9999;
+      }
+      
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 3px solid rgba(255, 255, 255, 0.1);
+        border-top: 3px solid #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 20px;
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+      
+      .loading-text {
+        color: #00d4ff;
+        font-size: 18px;
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      
+      .creator-attribution {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        text-align: center;
+      }
+      
+      .quantum-particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+      
+      .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #00d4ff;
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+        opacity: 0.6;
+      }
+      
+      @keyframes float {
+        0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.6; }
+        50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+      }
+    </style>
+    
+    <script>
+      // Create quantum particles effect
+      document.addEventListener('DOMContentLoaded', function() {
+        const particlesContainer = document.createElement('div');
+        particlesContainer.className = 'quantum-particles';
+        document.getElementById('loading').appendChild(particlesContainer);
+        
+        for (let i = 0; i < 50; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'particle';
+          particle.style.left = Math.random() * 100 + '%';
+          particle.style.top = Math.random() * 100 + '%';
+          particle.style.animationDelay = Math.random() * 6 + 's';
+          particle.style.animationDuration = (3 + Math.random() * 6) + 's';
+          particlesContainer.appendChild(particle);
+        }
+      });
+    </script>
+  </head>
+  <body>
+    <div id="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Initializing Sovereign Proof-of-AI</div>
+      <div class="creator-attribution">Created by Andrew Lee Cruz - Creator of the Universe</div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <script>
+      // Hide loading screen when React app loads
+      window.addEventListener('load', function() {
+        setTimeout(function() {
+          const loading = document.getElementById('loading');
+          if (loading) {
+            loading.style.opacity = '0';
+            loading.style.transition = 'opacity 0.5s ease-out';
+            setTimeout(function() {
+              loading.style.display = 'none';
+            }, 500);
+          }
+        }, 1000);
+      });
+    </script>
+  </body>
+</html>

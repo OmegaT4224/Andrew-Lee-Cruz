@@ -1,0 +1,80 @@
+{
+  "name": "Sovereign Main Branch Protection",
+  "target": "branch",
+  "enforcement": "active",
+  "conditions": {
+    "ref_name": {
+      "include": ["~main"],
+      "exclude": []
+    }
+  },
+  "rules": [
+    {
+      "type": "deletion",
+      "parameters": {}
+    },
+    {
+      "type": "non_fast_forward",
+      "parameters": {}
+    },
+    {
+      "type": "required_linear_history",
+      "parameters": {}
+    },
+    {
+      "type": "required_deployments",
+      "parameters": {
+        "required_deployment_environments": ["staging"]
+      }
+    },
+    {
+      "type": "required_status_checks",
+      "parameters": {
+        "required_status_checks": [
+          {
+            "context": "Security Scanning",
+            "integration_id": null
+          },
+          {
+            "context": "Smart Contracts Testing",
+            "integration_id": null
+          },
+          {
+            "context": "Violet-AF Quantum Agent Testing",
+            "integration_id": null
+          },
+          {
+            "context": "Axiom Dev Core Agent Testing",
+            "integration_id": null
+          },
+          {
+            "context": "Cloudflare Worker Testing",
+            "integration_id": null
+          },
+          {
+            "context": "Pages Frontend Testing",
+            "integration_id": null
+          }
+        ],
+        "strict_required_status_checks_policy": true
+      }
+    },
+    {
+      "type": "pull_request",
+      "parameters": {
+        "dismiss_stale_reviews_on_push": true,
+        "require_code_owner_review": true,
+        "require_last_push_approval": true,
+        "required_approving_review_count": 1,
+        "required_review_thread_resolution": true
+      }
+    }
+  ],
+  "bypass_actors": [
+    {
+      "actor_id": 1,
+      "actor_type": "Repository",
+      "bypass_mode": "always"
+    }
+  ]
+}

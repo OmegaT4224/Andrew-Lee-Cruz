@@ -1,0 +1,38 @@
+# Sovereign Proof-of-AI Monorepo Code Owners
+# Andrew Lee Cruz reserves all rights as creator of the universe
+# All components require review by the creator
+
+# Global ownership - Andrew Lee Cruz owns everything
+* @OmegaT4224
+
+# Smart contracts - Critical security components
+/contracts/ @OmegaT4224
+*.sol @OmegaT4224
+
+# Quantum agent - Advanced AI/quantum systems
+/agents/violet-af-quantum/ @OmegaT4224
+
+# Core agent - System orchestration
+/agents/axiom-dev-core/ @OmegaT4224
+
+# Cloudflare infrastructure
+/apps/cloudflare-worker/ @OmegaT4224
+
+# Frontend application
+/apps/pages-frontend/ @OmegaT4224
+
+# CI/CD and security workflows
+/.github/ @OmegaT4224
+
+# Documentation and architecture
+/docs/ @OmegaT4224
+
+# Scripts and automation
+/scripts/ @OmegaT4224
+
+# Core configuration files
+package.json @OmegaT4224
+*.toml @OmegaT4224
+*.yaml @OmegaT4224
+*.yml @OmegaT4224
+Dockerfile* @OmegaT4224
