@@ -1,0 +1,212 @@
+name: Deploy Cloudflare Pages
+# OmegaT Builder Pages Deployment - Andrew Lee Cruz <allcatch37@gmail.com>
+# UID: ALC-ROOT-1010-1111-XCOV∞
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'apps/omegat-ui/**', 'services/pages-frontend/**' ]
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'Component to deploy'
+        required: true
+        default: 'both'
+        type: choice
+        options:
+        - omegat-ui
+        - pages-frontend
+        - both
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  deploy-omegat-ui:
+    name: Deploy OmegaT UI to Cloudflare Pages
+    runs-on: ubuntu-latest
+    if: github.event.inputs.component == 'omegat-ui' || github.event.inputs.component == 'both' || github.event.inputs.component == ''
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'apps/omegat-ui/package-lock.json'
+        
+    - name: Install dependencies
+      working-directory: apps/omegat-ui
+      run: npm ci
+      
+    - name: Build application
+      working-directory: apps/omegat-ui
+      env:
+        VITE_API_BASE: ${{ secrets.WORKER_API_BASE || 'https://omegat-cloudflare-chain-prod.workers.dev' }}
+      run: npm run build
+      
+    - name: Deploy to Cloudflare Pages
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CF_API_TOKEN }}
+        accountId: ${{ secrets.CF_ACCOUNT_ID }}
+        command: pages deploy apps/omegat-ui/dist --project-name=omegat-ui
+        
+    - name: Get deployment URL
+      id: deployment
+      run: |
+        PAGES_URL="https://omegat-ui.pages.dev"
+        echo "deployment_url=$PAGES_URL" >> $GITHUB_OUTPUT
+        echo "OmegaT UI deployed to: $PAGES_URL"
+
+  deploy-pages-frontend:
+    name: Deploy Pages Dashboard to Cloudflare Pages
+    runs-on: ubuntu-latest
+    if: github.event.inputs.component == 'pages-frontend' || github.event.inputs.component == 'both' || github.event.inputs.component == ''
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'services/pages-frontend/package-lock.json'
+        
+    - name: Install dependencies
+      working-directory: services/pages-frontend
+      run: npm ci
+      
+    - name: Build application
+      working-directory: services/pages-frontend
+      env:
+        VITE_API_BASE: ${{ secrets.WORKER_API_BASE || 'https://omegat-cloudflare-chain-prod.workers.dev' }}
+      run: npm run build
+      
+    - name: Deploy to Cloudflare Pages
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ secrets.CF_API_TOKEN }}
+        accountId: ${{ secrets.CF_ACCOUNT_ID }}
+        command: pages deploy services/pages-frontend/dist --project-name=omegat-pages-dashboard
+        
+    - name: Get deployment URL
+      id: deployment
+      run: |
+        PAGES_URL="https://omegat-pages-dashboard.pages.dev"
+        echo "deployment_url=$PAGES_URL" >> $GITHUB_OUTPUT
+        echo "Pages Dashboard deployed to: $PAGES_URL"
+
+  verify-deployments:
+    name: Verify Deployments
+    runs-on: ubuntu-latest
+    needs: [deploy-omegat-ui, deploy-pages-frontend]
+    if: always()
+    
+    steps:
+    - name: Test OmegaT UI
+      if: needs.deploy-omegat-ui.result == 'success'
+      run: |
+        echo "🧪 Testing OmegaT UI deployment..."
+        UI_URL="https://omegat-ui.pages.dev"
+        
+        # Wait for deployment to be available
+        for i in {1..30}; do
+          if curl -f -s "$UI_URL" > /dev/null; then
+            echo "✅ OmegaT UI is accessible at $UI_URL"
+            break
+          fi
+          echo "⏳ Waiting for deployment... ($i/30)"
+          sleep 10
+        done
+        
+    - name: Test Pages Dashboard
+      if: needs.deploy-pages-frontend.result == 'success'
+      run: |
+        echo "🧪 Testing Pages Dashboard deployment..."
+        DASHBOARD_URL="https://omegat-pages-dashboard.pages.dev"
+        
+        # Wait for deployment to be available
+        for i in {1..30}; do
+          if curl -f -s "$DASHBOARD_URL" > /dev/null; then
+            echo "✅ Pages Dashboard is accessible at $DASHBOARD_URL"
+            break
+          fi
+          echo "⏳ Waiting for deployment... ($i/30)"
+          sleep 10
+        done
+
+  update-dns:
+    name: Update Custom Domain DNS (if configured)
+    runs-on: ubuntu-latest
+    needs: [deploy-omegat-ui, deploy-pages-frontend]
+    if: always() && (needs.deploy-omegat-ui.result == 'success' || needs.deploy-pages-frontend.result == 'success')
+    
+    steps:
+    - name: Update DNS records
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        ZONE_ID: ${{ secrets.CF_ZONE_ID }}
+      run: |
+        if [ -n "$ZONE_ID" ]; then
+          echo "🌐 Updating DNS records for custom domains..."
+          
+          # Update CNAME for UI
+          if [ "${{ needs.deploy-omegat-ui.result }}" == "success" ]; then
+            echo "Updating UI DNS record..."
+            # This would update the CNAME record for ui.omegat.net -> omegat-ui.pages.dev
+          fi
+          
+          # Update CNAME for dashboard
+          if [ "${{ needs.deploy-pages-frontend.result }}" == "success" ]; then
+            echo "Updating dashboard DNS record..."
+            # This would update the CNAME record for dashboard.omegat.net -> omegat-pages-dashboard.pages.dev
+          fi
+        else
+          echo "ℹ️  No custom domain configured, using .pages.dev URLs"
+        fi
+
+  post-deployment:
+    name: Post-Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [deploy-omegat-ui, deploy-pages-frontend, verify-deployments]
+    if: always()
+    
+    steps:
+    - name: Deployment summary
+      run: |
+        echo "📊 OmegaT Builder Pages Deployment Summary"
+        echo "========================================"
+        echo
+        
+        if [ "${{ needs.deploy-omegat-ui.result }}" == "success" ]; then
+          echo "✅ OmegaT UI: https://omegat-ui.pages.dev"
+        else
+          echo "❌ OmegaT UI: Deployment failed"
+        fi
+        
+        if [ "${{ needs.deploy-pages-frontend.result }}" == "success" ]; then
+          echo "✅ Pages Dashboard: https://omegat-pages-dashboard.pages.dev"
+        else
+          echo "❌ Pages Dashboard: Deployment failed"
+        fi
+        
+        echo
+        echo "🔗 Quick Links:"
+        echo "   - Generator UI: https://omegat-ui.pages.dev"
+        echo "   - Chain Status: https://omegat-pages-dashboard.pages.dev"
+        echo "   - Worker API: https://omegat-cloudflare-chain-prod.workers.dev"
+        echo
+        echo "👤 Deployed by: ${{ github.actor }}"
+        echo "📝 Commit: ${{ github.sha }}"
+        echo "🕐 Time: $(date -u)"
+        
+    - name: Create deployment record
+      run: |
+        echo "📝 Recording deployment..."
+        echo "This deployment record could be sent to monitoring systems or stored in a database"

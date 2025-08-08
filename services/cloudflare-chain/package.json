@@ -1,0 +1,23 @@
+{
+  "name": "cloudflare-chain",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler publish",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["cloudflare", "worker", "omegat", "poai"],
+  "author": "Andrew Lee Cruz <allcatch37@gmail.com>",
+  "license": "ISC",
+  "description": "OmegaT Builder Cloudflare Worker API",
+  "devDependencies": {
+    "@types/node": "^24.2.1",
+    "typescript": "^5.9.2",
+    "wrangler": "^4.28.1"
+  },
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20250807.0"
+  }
+}

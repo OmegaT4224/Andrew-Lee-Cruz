@@ -1,0 +1,40 @@
+{
+  "uid": "ALC-ROOT-1010-1111-XCOV\u221e",
+  "timestamp": "2025-08-08T18:37:55.378978Z",
+  "quantum_sequence": {
+    "circuit_type": "3-qubit H/CX...Z pattern",
+    "depth": 7,
+    "shots": 1529,
+    "measurement_results": {
+      "000": 130,
+      "001": 199,
+      "010": 223,
+      "011": 109,
+      "100": 165,
+      "101": 277,
+      "110": 210,
+      "111": 216
+    },
+    "probabilities": {
+      "000": 0.08502289077828647,
+      "001": 0.1301504251144539,
+      "010": 0.1458469587965991,
+      "011": 0.07128842380640942,
+      "100": 0.1079136690647482,
+      "101": 0.18116415958142576,
+      "110": 0.13734466971877043,
+      "111": 0.14126880313930673
+    },
+    "simulation_mode": true
+  },
+  "state_hash": "5032f213e95dd4cac27f02fa29786be55be1c21e2946402a66fcdd2d4062096a",
+  "metadata": {
+    "agent": "violet-af",
+    "version": "1.0.0",
+    "creator": "Andrew Lee Cruz",
+    "domains": [
+      "synthetica.us",
+      "omegat.net"
+    ]
+  }
+}

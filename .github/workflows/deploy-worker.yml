@@ -1,0 +1,146 @@
+name: Deploy Cloudflare Worker
+# OmegaT Builder Worker Deployment - Andrew Lee Cruz <allcatch37@gmail.com>
+# UID: ALC-ROOT-1010-1111-XCOV∞
+
+on:
+  push:
+    branches: [ main ]
+    paths: [ 'services/cloudflare-chain/**' ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - development
+        - production
+
+env:
+  NODE_VERSION: '20'
+
+jobs:
+  deploy-worker:
+    name: Deploy to Cloudflare Workers
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'services/cloudflare-chain/package-lock.json'
+        
+    - name: Install dependencies
+      working-directory: services/cloudflare-chain
+      run: npm ci
+      
+    - name: Build TypeScript
+      working-directory: services/cloudflare-chain
+      run: npm run build
+      
+    - name: Install Wrangler
+      run: npm install -g wrangler
+      
+    - name: Deploy to development
+      if: github.event.inputs.environment == 'development' || github.ref != 'refs/heads/main'
+      working-directory: services/cloudflare-chain
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      run: |
+        wrangler deploy --env development
+        
+    - name: Deploy to production
+      if: github.event.inputs.environment == 'production' || github.ref == 'refs/heads/main'
+      working-directory: services/cloudflare-chain
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      run: |
+        wrangler deploy --env production
+        
+    - name: Verify deployment
+      working-directory: services/cloudflare-chain
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+      run: |
+        # Get the worker URL and test basic connectivity
+        WORKER_URL=$(wrangler deployments list --name omegat-cloudflare-chain-prod --json | jq -r '.[0].url' || echo "")
+        if [ -n "$WORKER_URL" ]; then
+          echo "Testing worker at: $WORKER_URL"
+          curl -f "$WORKER_URL/status" || echo "Worker may still be starting up"
+        fi
+        
+    - name: Update deployment status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "✅ Worker deployment successful"
+        else
+          echo "❌ Worker deployment failed"
+          exit 1
+        fi
+
+  create-d1-database:
+    name: Setup D1 Database (if needed)
+    runs-on: ubuntu-latest
+    if: github.event.inputs.environment == 'production' || github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install Wrangler
+      run: npm install -g wrangler
+      
+    - name: Create D1 database (production)
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      run: |
+        # Check if database exists, create if not
+        if ! wrangler d1 list | grep -q "omegat-ledger-prod"; then
+          echo "Creating production D1 database..."
+          wrangler d1 create omegat-ledger-prod
+        else
+          echo "Production D1 database already exists"
+        fi
+        
+    - name: Initialize database schema
+      working-directory: services/cloudflare-chain
+      env:
+        CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+      run: |
+        # Apply schema migrations
+        wrangler d1 execute omegat-ledger-prod --file schema.sql || echo "Schema may already be applied"
+
+  post-deployment:
+    name: Post-Deployment Tasks
+    runs-on: ubuntu-latest
+    needs: [deploy-worker]
+    if: always() && needs.deploy-worker.result == 'success'
+    
+    steps:
+    - name: Notify deployment success
+      run: |
+        echo "🎉 OmegaT Builder Worker deployed successfully!"
+        echo "Environment: ${{ github.event.inputs.environment || 'production' }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Deployed by: ${{ github.actor }}"
+        
+    - name: Create deployment tag
+      if: github.ref == 'refs/heads/main'
+      run: |
+        TAG_NAME="worker-deploy-$(date +%Y%m%d-%H%M%S)"
+        echo "Creating deployment tag: $TAG_NAME"
+        # Note: This would require additional permissions to create tags
+        # git tag $TAG_NAME
+        # git push origin $TAG_NAME

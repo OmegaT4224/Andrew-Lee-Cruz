@@ -1,0 +1,30 @@
+compatibility_date = "2024-01-01"
+name = "omegat-cloudflare-chain"
+main = "src/index.ts"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "omegat-ledger"
+database_id = "YOUR_D1_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "ARTIFACTS"
+bucket_name = "omegat-artifacts"
+
+[vars]
+ENVIRONMENT = "development"
+
+[env.production]
+name = "omegat-cloudflare-chain-prod"
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "omegat-ledger-prod"
+database_id = "YOUR_PROD_D1_DATABASE_ID"
+
+[[env.production.r2_buckets]]
+binding = "ARTIFACTS"
+bucket_name = "omegat-artifacts-prod"
+
+[env.production.vars]
+ENVIRONMENT = "production"

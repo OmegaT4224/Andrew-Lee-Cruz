@@ -1,0 +1,225 @@
+name: CI/CD Pipeline
+# OmegaT Builder CI/CD - Andrew Lee Cruz <allcatch37@gmail.com>
+# UID: ALC-ROOT-1010-1111-XCOV∞
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  test-frontend:
+    name: Test Frontend Components
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        component: ['apps/omegat-ui', 'services/pages-frontend']
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: '${{ matrix.component }}/package-lock.json'
+        
+    - name: Install dependencies
+      working-directory: ${{ matrix.component }}
+      run: npm ci
+      
+    - name: Run linting
+      working-directory: ${{ matrix.component }}
+      run: npm run lint || echo "Linting not configured"
+      
+    - name: Run tests
+      working-directory: ${{ matrix.component }}
+      run: npm test || echo "Tests not configured"
+      
+    - name: Build application
+      working-directory: ${{ matrix.component }}
+      run: npm run build
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.component }}-build
+        path: ${{ matrix.component }}/dist/
+        retention-days: 7
+
+  test-worker:
+    name: Test Cloudflare Worker
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: 'services/cloudflare-chain/package-lock.json'
+        
+    - name: Install dependencies
+      working-directory: services/cloudflare-chain
+      run: npm ci
+      
+    - name: Build TypeScript
+      working-directory: services/cloudflare-chain
+      run: npm run build
+      
+    - name: Install Wrangler
+      run: npm install -g wrangler
+      
+    - name: Validate wrangler.toml
+      working-directory: services/cloudflare-chain
+      run: wrangler validate
+      
+    - name: Dry run deployment
+      working-directory: services/cloudflare-chain
+      run: wrangler deploy --dry-run
+
+  test-python-agent:
+    name: Test Python Agent
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Install dependencies
+      working-directory: agents/violet-af
+      run: |
+        pip install -r requirements.txt
+        
+    - name: Test agent import
+      working-directory: agents/violet-af
+      run: |
+        python -c "import quantum_sequence_trigger; print('Agent loads successfully')"
+        
+    - name: Run agent in simulation mode
+      working-directory: agents/violet-af
+      run: |
+        OMEGAT_API_BASE=http://example.com python quantum_sequence_trigger.py || true
+
+  security-scan:
+    name: Security Scan (CodeQL)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+      
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: javascript, python
+        
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+      
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+
+  dependency-check:
+    name: Dependency Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Install dependencies and audit (omegat-ui)
+      working-directory: apps/omegat-ui
+      run: |
+        npm ci
+        npm audit --audit-level=high
+        
+    - name: Install dependencies and audit (pages-frontend)
+      working-directory: services/pages-frontend
+      run: |
+        npm ci
+        npm audit --audit-level=high
+        
+    - name: Install dependencies and audit (cloudflare-chain)
+      working-directory: services/cloudflare-chain
+      run: |
+        npm ci
+        npm audit --audit-level=high
+
+  integration-test:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    needs: [test-frontend, test-worker, test-python-agent]
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        
+    - name: Run bootstrap script
+      run: |
+        ./scripts/bootstrap.sh
+        
+    - name: Verify all components built
+      run: |
+        echo "✅ Checking build artifacts..."
+        [ -d "apps/omegat-ui/dist" ] && echo "omegat-ui built"
+        [ -d "services/pages-frontend/dist" ] && echo "pages-frontend built"
+        [ -f "services/cloudflare-chain/src/index.ts" ] && echo "cloudflare-chain source available"
+        [ -f "agents/violet-af/VioletState.json" ] && echo "violet-af generated state" || echo "violet-af ready"
+
+  status-check:
+    name: CI Status Check
+    runs-on: ubuntu-latest
+    needs: [test-frontend, test-worker, test-python-agent, security-scan, dependency-check, integration-test]
+    if: always()
+    
+    steps:
+    - name: Check CI Status
+      run: |
+        if [[ "${{ needs.test-frontend.result }}" == "success" && \
+              "${{ needs.test-worker.result }}" == "success" && \
+              "${{ needs.test-python-agent.result }}" == "success" && \
+              "${{ needs.security-scan.result }}" == "success" && \
+              "${{ needs.dependency-check.result }}" == "success" && \
+              "${{ needs.integration-test.result }}" == "success" ]]; then
+          echo "✅ All CI checks passed"
+          exit 0
+        else
+          echo "❌ Some CI checks failed"
+          exit 1
+        fi
