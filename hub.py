@@ -58,3 +58,40 @@ async def search(qs: str, project: str = "general", n: int = 5):
                 items.append({"text": doc[:512], "meta": meta})
     items = sorted(items, key=lambda x: x["meta"]["ts"], reverse=True)[:n]
     return {"results": items}
+
+@app.post("/violet-af/trigger")
+async def trigger_violet_af():
+    """Trigger VIOLET-AF quantum automation system"""
+    try:
+        # Import VIOLET-AF system
+        import sys
+        sys.path.append("/home/runner/work/Andrew-Lee-Cruz/Andrew-Lee-Cruz/violet-af-quantum-agent/src")
+        from violet_af.violet_af_launcher import VioletAFIntegratedSystem
+        
+        # Run automation system
+        system = VioletAFIntegratedSystem()
+        report = system.run_complete_automation()
+        
+        # Store in vector database
+        report_text = f"VIOLET-AF automation completed: {report['automation_coverage']['automation_level']} across {report['blockchain_automation']['blockchains_integrated']} blockchains"
+        embed_and_store(report_text, {"source": "violet-af", "project": "quantum-automation", "ts": int(time.time())})
+        
+        return {"status": "success", "report": report}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
+@app.get("/violet-af/status")
+async def get_violet_af_status():
+    """Get VIOLET-AF system status"""
+    return {
+        "system": "VIOLET-AF Quantum Automation",
+        "uid": "ALC-ROOT-1010-1111-XCOV∞",
+        "status": "operational",
+        "capabilities": [
+            "quantum_logic_initialization",
+            "multi_blockchain_automation", 
+            "automated_fork_generation",
+            "cross_chain_deployment",
+            "reflect_chain_integration"
+        ]
+    }
