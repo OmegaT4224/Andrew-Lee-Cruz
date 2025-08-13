@@ -27,7 +27,6 @@ textblob==0.17.1
 # Data handling and storage
 pandas==2.1.0
 numpy==1.24.0
-sqlite3
 
 # Web scraping and content extraction
 beautifulsoup4==4.12.0
