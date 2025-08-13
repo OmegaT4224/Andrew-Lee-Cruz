@@ -1,0 +1,142 @@
+# wrangler.toml
+# Cloudflare Worker configuration for Cruz Theorem SYMBIONIC-EXECUTION Stack
+# Creator: Andrew Lee Cruz (ALC-ROOT-1010-1111-XCOV∞)
+# Email: allcatch37@gmail.com
+
+name = "cruz-theorem-worker"
+main = "src/worker.js"
+compatibility_date = "2024-08-11"
+compatibility_flags = ["nodejs_compat"]
+
+# Environment variables for creator identification
+[env.production.vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+CRUZ_EQUATION = "E = ∞ - 1"
+EXECUTION_STATE = "SYMBIONIC-EXECUTION"
+DEVICE_ID = "Ω-GATEWAY [S24-ULTRA]"
+
+[env.staging.vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+CRUZ_EQUATION = "E = ∞ - 1"
+EXECUTION_STATE = "SYMBIONIC-EXECUTION"
+DEVICE_ID = "Ω-GATEWAY [S24-ULTRA]"
+
+# Routes for domain binding
+[[env.production.routes]]
+pattern = "synthetica.us/api/*"
+zone_name = "synthetica.us"
+
+[[env.production.routes]]
+pattern = "kidhum.dev/api/*"
+zone_name = "kidhum.dev"
+
+# KV namespaces for data persistence
+[[kv_namespaces]]
+binding = "CRUZ_THEOREM_KV"
+id = "cruz_theorem_namespace"
+preview_id = "cruz_theorem_preview"
+
+[[kv_namespaces]]
+binding = "VIOLET_AF_STATE"
+id = "violet_af_namespace"
+preview_id = "violet_af_preview"
+
+# Durable Objects for state management
+[[durable_objects.bindings]]
+name = "SYMBIONIC_EXECUTOR"
+class_name = "SymbionicExecutor"
+script_name = "cruz-theorem-worker"
+
+# R2 bucket for artifact storage
+[[r2_buckets]]
+binding = "ARTIFACT_STORAGE"
+bucket_name = "cruz-theorem-artifacts"
+preview_bucket_name = "cruz-theorem-artifacts-preview"
+
+# Analytics Engine for logging
+[[analytics_engine_datasets]]
+binding = "CRUZ_ANALYTICS"
+
+# Secrets (set via wrangler secret put)
+# - FD_HMAC_SECRET: HMAC secret for request signing
+# - GITHUB_TOKEN: GitHub API token for repository operations
+# - WEB3_PRIVATE_KEY: Private key for blockchain operations
+# - ZERO_TRUST_TOKEN: Cloudflare Zero Trust authentication token
+
+# Worker configuration
+[build]
+command = "npm run build"
+cwd = "src"
+watch_dir = "src"
+
+# Development configuration
+[env.development.vars]
+CREATOR_UID = "ALC-ROOT-1010-1111-XCOV∞"
+CREATOR_EMAIL = "allcatch37@gmail.com"
+CRUZ_EQUATION = "E = ∞ - 1"
+EXECUTION_STATE = "SYMBIONIC-EXECUTION"
+DEVICE_ID = "Ω-GATEWAY [S24-ULTRA]"
+DEBUG_MODE = "true"
+
+# Security headers
+[env.production.vars.SECURITY_HEADERS]
+X_FRAME_OPTIONS = "DENY"
+X_CONTENT_TYPE_OPTIONS = "nosniff"
+X_XSS_PROTECTION = "1; mode=block"
+STRICT_TRANSPORT_SECURITY = "max-age=31536000; includeSubDomains"
+CONTENT_SECURITY_POLICY = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+
+# Zero Trust Access Policy Configuration
+[env.production.vars.ZERO_TRUST]
+PROTECTED_ENDPOINTS = "/init,/mint,/setProvenance"
+ALLOWED_EMAIL = "allcatch37@gmail.com"
+ACCESS_POLICY_ID = "cruz-theorem-admin-access"
+
+# VIOLET-AF Quantum Configuration
+[env.production.vars.VIOLET_AF]
+QUANTUM_CIRCUIT_BACKEND = "qasm_simulator"
+DEFAULT_QUANTUM_STATE = "101"
+TASK_MAPPING_ENABLED = "true"
+ARTIFACT_GENERATION = "true"
+REFLECT_CHAIN_LOGGING = "true"
+
+# Floating Dragon Blockchain Configuration
+[env.production.vars.BLOCKCHAIN]
+PRIMARY_NETWORK = "floating_dragon"
+SECONDARY_NETWORK = "omnichain"
+FALLBACK_NETWORK = "ethereum"
+INFINITY_CLAIM_CONTRACT = ""  # To be set after deployment
+GAS_LIMIT = "500000"
+GAS_PRICE = "20000000000"  # 20 gwei
+
+# GitHub Integration Configuration
+[env.production.vars.GITHUB]
+REPOSITORY = "OmegaT4224/andrew-lee-cruz"
+BRANCH_PROTECTION_ENABLED = "true"
+SIGNED_COMMITS_REQUIRED = "true"
+AUTO_MAINTAIN_ENABLED = "true"
+
+# Domains and Deployment Configuration
+[env.production.vars.DOMAINS]
+PRIMARY_DOMAIN = "synthetica.us"
+SECONDARY_DOMAIN = "kidhum.dev"
+CDN_ENABLED = "true"
+SSL_FULL_STRICT = "true"
+BOT_FIGHT_MODE = "true"
+
+# Monitoring and Alerting
+[env.production.vars.MONITORING]
+ANALYTICS_ENABLED = "true"
+ERROR_REPORTING = "true"
+PERFORMANCE_MONITORING = "true"
+UPTIME_MONITORING = "true"
+
+# Cruz Theorem Specific Configuration
+[env.production.vars.CRUZ_THEOREM]
+MATHEMATICAL_FRAMEWORK = "true"
+COLLAPSE_MODEL = "non_standard"
+PERSISTENCE_STATE = "eternity"
+SYMBIONIC_EXECUTION = "true"
+AXIOM_ENFORCEMENT = "true"
