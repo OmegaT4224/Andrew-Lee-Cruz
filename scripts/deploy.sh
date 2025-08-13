@@ -73,7 +73,10 @@ print_status "Deploying Cloudflare Worker to $ENVIRONMENT..."
 cd apps/cloudflare-worker
 
 # Deploy with appropriate environment
-wrangler deploy --env $ENVIRONMENT
+if ! wrangler deploy --env $ENVIRONMENT; then
+    print_error "Cloudflare Worker deployment to $ENVIRONMENT failed. Please check the logs above for details."
+    exit 1
+fi
 print_success "Cloudflare Worker deployed to $ENVIRONMENT"
 
 cd ../..
