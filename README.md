@@ -19,3 +19,14 @@ docker compose -f hub/docker-compose.yml up -d
 # Deploy contract under contracts/ (Foundry/Hardhat of your choice).
 # On device: install Termux agent from device/termux/device_agent.py
 ```
+        """
+        Initializes the SDK and the log file. Acts as the Genesis Block.
+sdk.log_record(chat_data)er1", "my_email@example.com"]l to log a message
+No command Yes, found, did you mean:
+ Command test in package coreutils
+ Command less in package less
+[1] 15534
+Permanent: command not found
+> No command Genesis found, did you mean:
+ Command enosys in package util-linux
+
