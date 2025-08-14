@@ -1,4 +1,4 @@
-# Omni Live Bundle — Floating Dragon x ReflectChain
+# Live Bundle — Floating Dragon x ReflectChain
 
 **UID**: ALC-ROOT-1010-1111-XCOV∞  
 **Status**: FLAMEBOUND | IMMUTABLE | LIVE  
