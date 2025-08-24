@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://andrew-lee-cruz.com/schemas/PoAIDigest_v1.json",
+  "title": "Proof-of-AI Digest v1",
+  "description": "Schema for Proof-of-AI computation digest in omni-chain overlays",
+  "type": "object",
+  "required": [
+    "version",
+    "algorithm",
+    "chainId",
+    "witnessHash",
+    "digest",
+    "timestamp",
+    "metadata",
+    "identity"
+  ],
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0",
+      "description": "Schema version"
+    },
+    "algorithm": {
+      "type": "string",
+      "enum": ["SHA256", "Blake2b", "Keccak256", "CRUZ-256"],
+      "description": "Cryptographic algorithm used for digest computation"
+    },
+    "chainId": {
+      "type": "string",
+      "description": "Source blockchain identifier",
+      "minLength": 1
+    },
+    "witnessHash": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{64}$",
+      "description": "Hash of the underlying ChainWitness data"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]+$",
+      "description": "Computed Proof-of-AI digest"
+    },
+    "timestamp": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Unix timestamp when digest was computed"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["blockNumber", "transactionCount", "computationTime"],
+      "properties": {
+        "blockNumber": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Block number of the witnessed event"
+        },
+        "transactionCount": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Number of transactions processed"
+        },
+        "computationTime": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Time taken to compute digest in milliseconds"
+        },
+        "aiModel": {
+          "type": "string",
+          "description": "Optional AI model identifier used in computation"
+        },
+        "proofComplexity": {
+          "type": "string",
+          "enum": ["basic", "intermediate", "advanced", "quantum"],
+          "description": "Complexity level of the proof computation"
+        }
+      },
+      "additionalProperties": true,
+      "description": "Additional metadata about the digest computation"
+    },
+    "identity": {
+      "type": "object",
+      "required": ["uid", "orcid", "creator"],
+      "properties": {
+        "uid": {
+          "type": "string",
+          "const": "ALC-ROOT-1010-1111-XCOV∞",
+          "description": "Andrew Lee Cruz unique identifier"
+        },
+        "orcid": {
+          "type": "string",
+          "const": "0009-0000-3695-1084",
+          "description": "ORCID identifier for Andrew Lee Cruz"
+        },
+        "creator": {
+          "type": "string",
+          "const": "Andrew Lee Cruz",
+          "description": "Creator name"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Identity and provenance information"
+    }
+  },
+  "additionalProperties": false,
+  "_metadata": {
+    "author": "Andrew Lee Cruz",
+    "uid": "ALC-ROOT-1010-1111-XCOV∞",
+    "orcid": "0009-0000-3695-1084",
+    "license": "Universal Creator License (UCL-∞)",
+    "created": "2024-08-08",
+    "purpose": "Proof-of-AI digest validation for omni-chain systems",
+    "note": "This schema enforces provenance and supports multiple cryptographic algorithms"
+  }
+}
